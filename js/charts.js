@@ -90,3 +90,161 @@ vegaEmbed("#excise_bar", {
     ],
   },
 });
+
+// ── Chart 3: Sin Tax Revenue Stacked Bar ──────────────────────
+vegaEmbed("#sin_tax_revenue", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  title: "Sin Tax Revenue: Tobacco vs Alcohol (2012–2017)",
+  width: 600,
+  height: 300,
+  data: { url: BASE + "sin_tax_revenue.csv" },
+  transform: [
+    {
+      fold: ["tobacco_revenue_myr_mil", "alcohol_revenue_myr_mil"],
+      as: ["revenue_type", "revenue"],
+    },
+  ],
+  mark: "bar",
+  encoding: {
+    x: { field: "year", type: "ordinal", title: "Year" },
+    y: {
+      field: "revenue",
+      type: "quantitative",
+      title: "Revenue (MYR mil)",
+      stack: "zero",
+    },
+    color: {
+      field: "revenue_type",
+      type: "nominal",
+      scale: {
+        domain: ["tobacco_revenue_myr_mil", "alcohol_revenue_myr_mil"],
+        range: ["#e63946", "#457b9d"],
+      },
+      legend: {
+        title: "Revenue Type",
+        labelExpr:
+          "datum.label === 'tobacco_revenue_myr_mil' ? 'Tobacco' : 'Alcohol'",
+      },
+    },
+    tooltip: [
+      { field: "year", title: "Year" },
+      { field: "revenue_type", title: "Type" },
+      { field: "revenue", title: "Revenue (MYR mil)", format: ",.0f" },
+      { field: "sin_tax_pct_of_excise", title: "% of Excise Revenue" },
+    ],
+  },
+});
+
+// ── Chart 4: Illicit Cigarettes Trend ─────────────────────────
+vegaEmbed("#illicit_trend", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  title: "Illicit Cigarette Market Share in Malaysia (2015–2024)",
+  width: 600,
+  height: 300,
+  data: { url: BASE + "illicit_cigarettes_trend.csv" },
+  mark: { type: "line", point: true, color: "#e63946" },
+  encoding: {
+    x: { field: "year", type: "ordinal", title: "Year" },
+    y: {
+      field: "illicit_share_pct",
+      type: "quantitative",
+      title: "Illicit Market Share (%)",
+      scale: { zero: false },
+    },
+    tooltip: [
+      { field: "year", title: "Year" },
+      { field: "illicit_share_pct", title: "Illicit Share (%)" },
+      { field: "notes", title: "Notes" },
+    ],
+  },
+});
+
+// ── Chart 5: ASEAN Cigarette Prices ───────────────────────────
+vegaEmbed("#asean_prices", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  title: "Legal vs Illicit Cigarette Prices Across ASEAN",
+  width: 550,
+  height: 300,
+  data: { url: BASE + "asean_cigarette_prices.csv" },
+  transform: [
+    {
+      fold: ["legal_price_usd", "illicit_price_usd"],
+      as: ["price_type", "price"],
+    },
+    { filter: "datum.price !== null && datum.price !== ''" },
+  ],
+  mark: { type: "bar" },
+  encoding: {
+    y: {
+      field: "country",
+      type: "nominal",
+      title: "Country",
+      sort: { op: "max", field: "price", order: "descending" },
+    },
+    x: { field: "price", type: "quantitative", title: "Price (USD)" },
+    color: {
+      field: "price_type",
+      type: "nominal",
+      scale: {
+        domain: ["legal_price_usd", "illicit_price_usd"],
+        range: ["#457b9d", "#e63946"],
+      },
+      legend: {
+        title: "Price Type",
+        labelExpr:
+          "datum.label === 'legal_price_usd' ? 'Legal' : 'Illicit'",
+      },
+    },
+    tooltip: [
+      { field: "country", title: "Country" },
+      { field: "price_type", title: "Type" },
+      { field: "price", title: "Price (USD)", format: ".2f" },
+      { field: "tax_share_pct", title: "Tax Share (%)" },
+      {
+        field: "smoking_prevalence_pct",
+        title: "Smoking Prevalence (%)",
+      },
+    ],
+  },
+});
+
+// ── Chart 6: Smoking Demographics ─────────────────────────────
+vegaEmbed("#demographics", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  title: "Smoking Prevalence by Demographic Group",
+  data: { url: BASE + "smoking_demographics.csv" },
+  facet: {
+    field: "category",
+    type: "nominal",
+    columns: 2,
+    header: { title: null },
+  },
+  spec: {
+    width: 250,
+    height: 120,
+    mark: { type: "bar", color: "#e63946" },
+    encoding: {
+      x: {
+        field: "prevalence_pct",
+        type: "quantitative",
+        title: "Prevalence (%)",
+      },
+      y: {
+        field: "group",
+        type: "nominal",
+        title: null,
+        sort: {
+          field: "prevalence_pct",
+          op: "max",
+          order: "descending",
+        },
+      },
+      tooltip: [
+        { field: "category", title: "Category" },
+        { field: "group", title: "Group" },
+        { field: "prevalence_pct", title: "Prevalence (%)" },
+        { field: "source", title: "Source" },
+      ],
+    },
+  },
+});
