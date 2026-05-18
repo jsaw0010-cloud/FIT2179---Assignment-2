@@ -1,5 +1,5 @@
 const BASE =
-  "https://raw.githubusercontent.com/jsaw0010-cloud/fit2179-assignment2/main/data/";
+  "https://raw.githubusercontent.com/jsaw0010-cloud/FIT2179---Assignment-2/main/data/";
 
 // ── Chart 1: Smoking Trend Line Chart ──────────────────────────
 vegaEmbed("#line_trend", {
@@ -8,20 +8,28 @@ vegaEmbed("#line_trend", {
   width: 600,
   height: 300,
   data: { url: BASE + "smoking_trend_national.csv" },
-  mark: { type: "line", point: true },
-  encoding: {
-    x: { field: "year", type: "ordinal", title: "Year" },
-    y: {
-      field: "smoking_prevalence_pct",
-      type: "quantitative",
-      title: "Prevalence (%)",
-      scale: { zero: false },
+  layer: [
+    {
+      mark: { type: "line", point: true },
+      encoding: {
+        x: { field: "year", type: "ordinal", title: "Year" },
+        y: {
+          field: "prevalence_overall",
+          type: "quantitative",
+          title: "Prevalence (%)",
+          scale: { zero: false },
+        },
+        color: { value: "#e63946" },
+        tooltip: [
+          { field: "year", title: "Year" },
+          { field: "prevalence_overall", title: "Overall (%)" },
+          { field: "prevalence_male", title: "Male (%)" },
+          { field: "prevalence_female", title: "Female (%)" },
+          { field: "source", title: "Source" },
+        ],
+      },
     },
-    tooltip: [
-      { field: "year", title: "Year" },
-      { field: "smoking_prevalence_pct", title: "Prevalence (%)" },
-    ],
-  },
+  ],
 });
 
 // ── Chart 2: Excise Duty Bar Chart ────────────────────────────
@@ -31,7 +39,7 @@ vegaEmbed("#excise_bar", {
   width: 600,
   height: 300,
   data: { url: BASE + "excise_duty_rates.csv" },
-  mark: "bar",
+  mark: { type: "bar", color: "#457b9d" },
   encoding: {
     x: { field: "year", type: "ordinal", title: "Year" },
     y: {
@@ -45,5 +53,3 @@ vegaEmbed("#excise_bar", {
     ],
   },
 });
-
-// Add more charts here...
