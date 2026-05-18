@@ -1,0 +1,18 @@
+state,smoking_prevalence,above_national_avg,region
+Kedah,27.6,true,Peninsular
+Sabah,25.3,true,East Malaysia
+Terengganu,23.9,true,Peninsular
+Perak,23.8,true,Peninsular
+Pahang,23.1,true,Peninsular
+Perlis,22.5,true,Peninsular
+Kelantan,22.4,true,Peninsular
+Johor,21.5,true,Peninsular
+Malaysia (National),21.3,false,National
+Sarawak,20.8,false,East Malaysia
+Melaka,20.1,false,Peninsular
+Negeri Sembilan,19.8,false,Peninsular
+Selangor,18.9,false,Peninsular
+Pulau Pinang,17.4,false,Peninsular
+W.P. Labuan,16.9,false,East Malaysia
+W.P. Kuala Lumpur,14.8,false,Peninsular
+W.P. Putrajaya,12.3,false,Peninsular

@@ -1,0 +1,16 @@
+category,group,prevalence_pct,year,source
+gender,Male,35.7,2023,GATS-M 2023
+gender,Female,1.5,2023,GATS-M 2023
+age_group,15-24,13.2,2023,GATS-M 2023
+age_group,25-44,24.9,2023,GATS-M 2023
+age_group,45-59,21.4,2023,GATS-M 2023
+age_group,60+,16.1,2023,GATS-M 2023
+ethnicity,Malay,22.6,2019,NHMS 2019
+ethnicity,Chinese,13.7,2019,NHMS 2019
+ethnicity,Indian,11.5,2019,NHMS 2019
+ethnicity,Other Bumiputra,21.7,2019,NHMS 2019
+education,Primary or less,31.2,2023,GATS-M 2023
+education,Secondary,23.6,2023,GATS-M 2023
+education,Tertiary,10.8,2023,GATS-M 2023
+residence,Urban,20.1,2019,NHMS 2019
+residence,Rural,25.4,2019,NHMS 2019
