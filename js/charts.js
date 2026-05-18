@@ -1,6 +1,46 @@
 const BASE =
   "https://raw.githubusercontent.com/jsaw0010-cloud/FIT2179---Assignment-2/main/data/";
 
+
+vegaEmbed("#choropleth", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  width: 700,
+  height: 400,
+  projection: { type: "mercator" },
+  layer: [
+    {
+      data: {
+        url: BASE + "malaysia_state.topojson",
+        format: { type: "topojson", feature: "malaysia_state" },
+      },
+      transform: [
+        {
+          lookup: "properties.state",
+          from: {
+            data: { url: BASE + "smoking_by_state_2019.csv" },
+            key: "state",
+            fields: ["smoking_rate_pct"],
+          },
+        },
+      ],
+      mark: { type: "geoshape", stroke: "white", strokeWidth: 1 },
+      encoding: {
+        color: {
+          field: "smoking_rate_pct",
+          type: "quantitative",
+          title: "Smoking Rate (%)",
+          scale: { scheme: "reds" },
+        },
+        tooltip: [
+          { field: "properties.state", title: "State" },
+          { field: "smoking_rate_pct", title: "Smoking Rate (%)" },
+        ],
+      },
+    },
+  ],
+});
+
+
 // ── Chart 1: Smoking Trend Line Chart ──────────────────────────
 vegaEmbed("#line_trend", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
