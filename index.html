@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Economics of Sin Taxes in Malaysia</title>
+
+    <!-- Vega-Lite libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <h1>The Economics of Sin Taxes in Malaysia</h1>
+    <p class="subtitle">
+      Alcohol, Tobacco, and the Price of Public Health
+    </p>
+
+    <!-- Each div is one visualisation -->
+    <div class="section">
+      <h2>Smoking Prevalence by State (2019)</h2>
+      <div id="choropleth"></div>
+    </div>
+
+    <div class="section">
+      <h2>National Smoking Trend Over Time</h2>
+      <div id="line_trend"></div>
+    </div>
+
+    <div class="section">
+      <h2>Excise Duty Rates</h2>
+      <div id="excise_bar"></div>
+    </div>
+
+    <!-- Add more sections for each chart -->
+
+    <script src="js/charts.js"></script>
+  </body>
+</html>
