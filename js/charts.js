@@ -342,7 +342,49 @@ vegaEmbed("#illicit_trend", {
             values: [
               { year: "2016", y: 70, label: "2015–16 Tax Hike" },
               { year: "2020", y: 70, label: "Peak: 63.8%" },
-              { year: "2023", y: 70, lab
+              { year: "2023", y: 70, label: "Moratorium" }
+            ]
+          },
+          mark: { type: "text", align: "left", dx: 4, fontSize: 10, fontWeight: "bold" },
+          encoding: {
+            x: { field: "year", type: "ordinal" },
+            y: { field: "y", type: "quantitative" },
+            text: { field: "label" },
+            color: {
+              field: "label",
+              type: "nominal",
+              scale: {
+                domain: ["2015–16 Tax Hike", "Peak: 63.8%", "Moratorium"],
+                range: ["#c1121f", "#555", "#2d6a4f"]
+              },
+              legend: null
+            }
+          }
+        }
+      ]
+    },
+    {
+      width: 620,
+      height: 50,
+      title: "Drag to select a time range ↓",
+      params: [
+        {
+          name: "time_brush",
+          select: { type: "interval", encodings: ["x"] }
+        }
+      ],
+      mark: { type: "line", color: "#e63946" },
+      encoding: {
+        x: { field: "year", type: "ordinal", axis: { title: "Year" } },
+        y: {
+          field: "illicit_share_pct",
+          type: "quantitative",
+          axis: { tickCount: 3, grid: false, title: "" }
+        }
+      }
+    }
+  ]
+});
 
 // ── Chart 6: ASEAN Cigarette Prices ───────────────────────────
 vegaEmbed("#asean_prices", {
