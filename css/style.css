@@ -1,27 +1,328 @@
+/* ═══════════════════════════════════════════════════════════════
+   FIT2179 Assignment 2 — Malaysia Sin Tax Visualisation
+   Style: Editorial / investigative journalism aesthetic
+   Fonts: Playfair Display (headings) + Source Serif 4 (body)
+═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* ── CSS Variables ──────────────────────────────────────────── */
+:root {
+  --ink:         #1a1008;
+  --ink-light:   #4a3f30;
+  --ink-faint:   #8a7d6a;
+  --paper:       #f7f3ec;
+  --paper-warm:  #efe8d8;
+  --accent:      #b91c1c;
+  --accent-soft: #fef2f2;
+  --gold:        #92400e;
+  --rule:        #d4c9b0;
+  --chart-red:   #e63946;
+  --chart-blue:  #457b9d;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Source Serif 4', Georgia, serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  --max-w: 900px;
+  --col-w: 660px;
+}
+
+/* ── Reset & Base ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
 body {
-  font-family: "Segoe UI", sans-serif;
-  max-width: 1100px;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--ink);
+  background-color: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Page wrapper ───────────────────────────────────────────── */
+.page-wrap {
+  max-width: var(--max-w);
   margin: 0 auto;
-  padding: 2rem;
-  background: #fafafa;
-  color: #222;
+  padding: 0 2rem 6rem;
 }
 
-h1 {
-  font-size: 2rem;
-  margin-bottom: 0.25rem;
+/* ── Masthead ───────────────────────────────────────────────── */
+.masthead {
+  border-top: 4px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 3rem 0 2.5rem;
+  margin-bottom: 3rem;
 }
 
-.subtitle {
-  color: #666;
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
+.masthead .kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
 }
 
+.masthead h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+  max-width: 720px;
+}
+
+.masthead h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.masthead .deck {
+  font-size: 1.15rem;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--ink-light);
+  max-width: var(--col-w);
+  margin-bottom: 1.5rem;
+}
+
+.masthead .byline {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Pull stats row ─────────────────────────────────────────── */
+.stat-row {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin: 2.5rem 0 3.5rem;
+  padding: 1.5rem 0;
+}
+
+.stat-item {
+  flex: 1;
+  padding: 0 1.5rem;
+  border-right: 1px solid var(--rule);
+}
+
+.stat-item:first-child { padding-left: 0; }
+.stat-item:last-child  { border-right: none; }
+
+.stat-item .num {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.stat-item .label {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--ink-light);
+}
+
+/* ── Section headings ───────────────────────────────────────── */
 .section {
-  background: white;
-  border-radius: 8px;
+  margin-bottom: 5rem;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+}
+
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Body text ──────────────────────────────────────────────── */
+p {
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--ink-light);
+  max-width: var(--col-w);
+  margin-bottom: 1rem;
+}
+
+p strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ── Pull quote ─────────────────────────────────────────────── */
+.pullquote {
+  border-left: 3px solid var(--accent);
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  margin: 2rem 0;
+  max-width: var(--col-w);
+}
+
+.pullquote p {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* ── Chart containers ───────────────────────────────────────── */
+.chart-wrap {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
   padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: 1.5rem 0;
+}
+
+.chart-caption {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  margin-top: 0.75rem;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+}
+
+/* Give Vega-Lite charts room and remove default white bg */
+.vega-embed {
+  width: 100% !important;
+}
+
+.vega-embed canvas,
+.vega-embed svg {
+  max-width: 100%;
+}
+
+/* ── Horizontal rule / section divider ──────────────────────── */
+.rule-divider {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 4rem 0;
+}
+
+.rule-divider.thick {
+  border-top: 3px solid var(--ink);
+}
+
+/* ── Key findings box ───────────────────────────────────────── */
+.findings-box {
+  background: var(--accent-soft);
+  border: 1px solid #fca5a5;
+  border-left: 3px solid var(--accent);
+  border-radius: 2px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  max-width: var(--col-w);
+}
+
+.findings-box .findings-title {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.findings-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.findings-box ul li {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink);
+  padding: 0.2rem 0;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.findings-box ul li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Footer / sources ───────────────────────────────────────── */
+.sources {
+  border-top: 3px solid var(--ink);
+  padding-top: 2rem;
+  margin-top: 5rem;
+}
+
+.sources h3 {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 1rem;
+}
+
+.sources ol {
+  padding-left: 1.2rem;
+}
+
+.sources ol li {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--ink-faint);
+  margin-bottom: 0.4rem;
+}
+
+.sources ol li a {
+  color: var(--chart-blue);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.sources ol li a:hover {
+  border-bottom-color: var(--chart-blue);
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  body { font-size: 16px; }
+  .page-wrap { padding: 0 1rem 4rem; }
+  .stat-row { flex-direction: column; gap: 1rem; }
+  .stat-item { border-right: none; border-bottom: 1px solid var(--rule); padding: 0 0 1rem; }
+  .stat-item:last-child { border-bottom: none; }
+  h2 { font-size: 1.4rem; }
 }
