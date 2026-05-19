@@ -322,18 +322,13 @@ vegaEmbed("#illicit_trend", {
         {
           mark: { type: "area", color: "#e63946", opacity: 0.08 },
           encoding: {
-            x: {
-              field: "year",
-              type: "ordinal",
-              scale: { domain: { param: "time_brush" } },
-              axis: { title: "" }
-            },
+            x: { ... },
             y: {
               field: "illicit_share_pct",
               type: "quantitative",
-              title: "Illicit Market Share (%)",
               scale: { domain: [30, 72] }
-            }
+            },
+            y2: { datum: 30 }
           }
         },
         {
