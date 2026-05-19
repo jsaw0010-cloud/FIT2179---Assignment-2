@@ -326,3 +326,6 @@ p strong {
   .stat-item:last-child { border-bottom: none; }
   h2 { font-size: 1.4rem; }
 }
+
+.vega-embed summary { display: none; }
+
