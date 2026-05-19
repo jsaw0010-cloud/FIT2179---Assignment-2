@@ -274,99 +274,75 @@ vegaEmbed("#sin_tax_revenue", {
   },
 });
 
-// ── Chart 5: Illicit Cigarettes with year slider ──────────────
+// ── Chart 5: Illicit Trend — Overview+Detail brushing ─────────
 vegaEmbed("#illicit_trend", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Illicit Cigarette Market Share in Malaysia (2015–2024)",
-  width: 620,
-  height: 320,
-  params: [
+  data: { url: BASE + "illicit_cigarettes_trend.csv" },
+  vconcat: [
     {
-      name: "year_start",
-      value: 2015,
-      bind: {
-        input: "range",
-        min: 2015,
-        max: 2022,
-        step: 1,
-        name: "Show from year: "
-      }
-    }
-  ],
-  layer: [
-    {
-      data: { url: BASE + "illicit_cigarettes_trend.csv" },
-      transform: [{ filter: "datum.year >= year_start" }],
-      mark: { type: "area", color: "#e63946", opacity: 0.08 },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: {
-          field: "illicit_share_pct",
-          type: "quantitative",
-          scale: { domain: [30, 72] }
-        }
-      }
-    },
-    {
-      data: { url: BASE + "illicit_cigarettes_trend.csv" },
-      transform: [{ filter: "datum.year >= year_start" }],
-      mark: { type: "line", point: { size: 60 }, color: "#e63946", strokeWidth: 2.5 },
-      encoding: {
-        x: { field: "year", type: "ordinal", title: "Year" },
-        y: {
-          field: "illicit_share_pct",
-          type: "quantitative",
-          title: "Illicit Market Share (%)",
-          scale: { domain: [30, 72] }
+      title: "Illicit Cigarette Market Share in Malaysia (2015–2024)",
+      width: 620,
+      height: 280,
+      layer: [
+        {
+          mark: { type: "area", color: "#e63946", opacity: 0.08 },
+          encoding: {
+            x: {
+              field: "year",
+              type: "ordinal",
+              scale: { domain: { param: "time_brush" } },
+              axis: { title: "" }
+            },
+            y: {
+              field: "illicit_share_pct",
+              type: "quantitative",
+              title: "Illicit Market Share (%)",
+              scale: { domain: [30, 72] }
+            }
+          }
         },
-        tooltip: [
-          { field: "year", title: "Year" },
-          { field: "illicit_share_pct", title: "Illicit Share (%)" },
-          { field: "notes", title: "Notes" }
-        ]
-      }
-    },
-    {
-      data: { values: [{ year: "2016" }] },
-      mark: { type: "rule", strokeDash: [5, 4], color: "#c1121f", strokeWidth: 1.5 },
-      encoding: { x: { field: "year", type: "ordinal" } }
-    },
-    {
-      data: { values: [{ year: "2020" }] },
-      mark: { type: "rule", strokeDash: [5, 4], color: "#888", strokeWidth: 1.5 },
-      encoding: { x: { field: "year", type: "ordinal" } }
-    },
-    {
-      data: { values: [{ year: "2023" }] },
-      mark: { type: "rule", strokeDash: [5, 4], color: "#2d6a4f", strokeWidth: 1.5 },
-      encoding: { x: { field: "year", type: "ordinal" } }
-    },
-    {
-      data: {
-        values: [
-          { year: "2016", y: 70, label: "2015–16 Tax Hike" },
-          { year: "2020", y: 70, label: "Peak: 63.8%" },
-          { year: "2023", y: 70, label: "Moratorium" }
-        ]
-      },
-      mark: { type: "text", align: "left", dx: 4, fontSize: 10, fontWeight: "bold" },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "y", type: "quantitative" },
-        text: { field: "label" },
-        color: {
-          field: "label",
-          type: "nominal",
-          scale: {
-            domain: ["2015–16 Tax Hike", "Peak: 63.8%", "Moratorium"],
-            range: ["#c1121f", "#555", "#2d6a4f"]
-          },
-          legend: null
-        }
-      }
-    }
-  ]
-});
+        {
+          mark: { type: "line", point: { size: 70 }, color: "#e63946", strokeWidth: 2.5 },
+          encoding: {
+            x: {
+              field: "year",
+              type: "ordinal",
+              scale: { domain: { param: "time_brush" } },
+              axis: { title: "" }
+            },
+            y: {
+              field: "illicit_share_pct",
+              type: "quantitative",
+              scale: { domain: [30, 72] }
+            },
+            tooltip: [
+              { field: "year", title: "Year" },
+              { field: "illicit_share_pct", title: "Illicit Share (%)" },
+              { field: "notes", title: "Notes" }
+            ]
+          }
+        },
+        {
+          data: { values: [{ year: "2016" }] },
+          mark: { type: "rule", strokeDash: [5, 4], color: "#c1121f", strokeWidth: 1.5 },
+          encoding: { x: { field: "year", type: "ordinal" } }
+        },
+        {
+          data: { values: [{ year: "2020" }] },
+          mark: { type: "rule", strokeDash: [5, 4], color: "#888", strokeWidth: 1.5 },
+          encoding: { x: { field: "year", type: "ordinal" } }
+        },
+        {
+          data: { values: [{ year: "2023" }] },
+          mark: { type: "rule", strokeDash: [5, 4], color: "#2d6a4f", strokeWidth: 1.5 },
+          encoding: { x: { field: "year", type: "ordinal" } }
+        },
+        {
+          data: {
+            values: [
+              { year: "2016", y: 70, label: "2015–16 Tax Hike" },
+              { year: "2020", y: 70, label: "Peak: 63.8%" },
+              { year: "2023", y: 70, lab
 
 // ── Chart 6: ASEAN Cigarette Prices ───────────────────────────
 vegaEmbed("#asean_prices", {
