@@ -1,18 +1,25 @@
 const BASE =
   "https://raw.githubusercontent.com/jsaw0010-cloud/FIT2179---Assignment-2/main/data/";
 
-// ── Chart 1: Choropleth Map ────────────────────────────────────
+// ── Chart 1: Choropleth Map with legend highlight ──────────────
 vegaEmbed("#choropleth", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Smoking Prevalence by Malaysian State (2019)",
   width: 700,
   height: 420,
+  params: [
+    {
+      name: "state_highlight",
+      select: { type: "point", fields: ["above_national_avg"] },
+      bind: "legend"
+    }
+  ],
   projection: { type: "mercator" },
   layer: [
     {
       data: {
         url: BASE + "malaysia_state.topojson",
-        format: { type: "topojson", feature: "states" },
+        format: { type: "topojson", feature: "states" }
       },
       transform: [
         {
@@ -20,9 +27,9 @@ vegaEmbed("#choropleth", {
           from: {
             data: { url: BASE + "smoking_by_state_2019.csv" },
             key: "state",
-            fields: ["smoking_rate_pct"],
-          },
-        },
+            fields: ["smoking_rate_pct", "above_national_avg"]
+          }
+        }
       ],
       mark: { type: "geoshape", stroke: "white", strokeWidth: 1 },
       encoding: {
@@ -31,15 +38,20 @@ vegaEmbed("#choropleth", {
           type: "quantitative",
           title: "Smoking Rate (%)",
           scale: { scheme: "reds", domain: [10, 30] },
-          legend: { orient: "bottom-right" },
+          legend: { orient: "bottom-right" }
+        },
+        opacity: {
+          condition: { param: "state_highlight", value: 1 },
+          value: 0.2
         },
         tooltip: [
           { field: "properties.Name", title: "State" },
           { field: "smoking_rate_pct", title: "Smoking Rate (%)" },
-        ],
-      },
-    },
-  ],
+          { field: "above_national_avg", title: "Above national avg?" }
+        ]
+      }
+    }
+  ]
 });
 
 // ── Chart 2: Smoking Trend Line Chart ──────────────────────────
@@ -262,27 +274,42 @@ vegaEmbed("#sin_tax_revenue", {
   },
 });
 
-// ── Chart 5: Illicit Cigarettes (annotated) ───────────────────
+// ── Chart 5: Illicit Cigarettes with year slider ──────────────
 vegaEmbed("#illicit_trend", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Illicit Cigarette Market Share in Malaysia (2015–2024)",
   width: 620,
   height: 320,
+  params: [
+    {
+      name: "year_start",
+      value: 2015,
+      bind: {
+        input: "range",
+        min: 2015,
+        max: 2022,
+        step: 1,
+        name: "Show from year: "
+      }
+    }
+  ],
   layer: [
     {
       data: { url: BASE + "illicit_cigarettes_trend.csv" },
+      transform: [{ filter: "datum.year >= year_start" }],
       mark: { type: "area", color: "#e63946", opacity: 0.08 },
       encoding: {
         x: { field: "year", type: "ordinal" },
         y: {
           field: "illicit_share_pct",
           type: "quantitative",
-          scale: { domain: [30, 72] },
-        },
-      },
+          scale: { domain: [30, 72] }
+        }
+      }
     },
     {
       data: { url: BASE + "illicit_cigarettes_trend.csv" },
+      transform: [{ filter: "datum.year >= year_start" }],
       mark: { type: "line", point: { size: 60 }, color: "#e63946", strokeWidth: 2.5 },
       encoding: {
         x: { field: "year", type: "ordinal", title: "Year" },
@@ -290,37 +317,37 @@ vegaEmbed("#illicit_trend", {
           field: "illicit_share_pct",
           type: "quantitative",
           title: "Illicit Market Share (%)",
-          scale: { domain: [30, 72] },
+          scale: { domain: [30, 72] }
         },
         tooltip: [
           { field: "year", title: "Year" },
           { field: "illicit_share_pct", title: "Illicit Share (%)" },
-          { field: "notes", title: "Notes" },
-        ],
-      },
+          { field: "notes", title: "Notes" }
+        ]
+      }
     },
     {
       data: { values: [{ year: "2016" }] },
       mark: { type: "rule", strokeDash: [5, 4], color: "#c1121f", strokeWidth: 1.5 },
-      encoding: { x: { field: "year", type: "ordinal" } },
+      encoding: { x: { field: "year", type: "ordinal" } }
     },
     {
       data: { values: [{ year: "2020" }] },
       mark: { type: "rule", strokeDash: [5, 4], color: "#888", strokeWidth: 1.5 },
-      encoding: { x: { field: "year", type: "ordinal" } },
+      encoding: { x: { field: "year", type: "ordinal" } }
     },
     {
       data: { values: [{ year: "2023" }] },
       mark: { type: "rule", strokeDash: [5, 4], color: "#2d6a4f", strokeWidth: 1.5 },
-      encoding: { x: { field: "year", type: "ordinal" } },
+      encoding: { x: { field: "year", type: "ordinal" } }
     },
     {
       data: {
         values: [
           { year: "2016", y: 70, label: "2015–16 Tax Hike" },
           { year: "2020", y: 70, label: "Peak: 63.8%" },
-          { year: "2023", y: 70, label: "Moratorium" },
-        ],
+          { year: "2023", y: 70, label: "Moratorium" }
+        ]
       },
       mark: { type: "text", align: "left", dx: 4, fontSize: 10, fontWeight: "bold" },
       encoding: {
@@ -332,13 +359,13 @@ vegaEmbed("#illicit_trend", {
           type: "nominal",
           scale: {
             domain: ["2015–16 Tax Hike", "Peak: 63.8%", "Moratorium"],
-            range: ["#c1121f", "#555", "#2d6a4f"],
+            range: ["#c1121f", "#555", "#2d6a4f"]
           },
-          legend: null,
-        },
-      },
-    },
-  ],
+          legend: null
+        }
+      }
+    }
+  ]
 });
 
 // ── Chart 6: ASEAN Cigarette Prices ───────────────────────────
@@ -390,77 +417,83 @@ vegaEmbed("#asean_prices", {
   },
 });
 
-// ── Chart 7: Demographics faceted ────────────────────────────
+// ── Chart 7: Demographics with dropdown filter ────────────────
 vegaEmbed("#demographics", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Smoking Prevalence by Demographic Group",
+  width: 400,
+  height: 200,
+  params: [
+    {
+      name: "category_selection",
+      bind: {
+        input: "select",
+        options: [null, "gender", "age_group", "ethnicity", "education", "residence"],
+        labels: ["Show All", "Gender", "Age Group", "Ethnicity", "Education", "Residence"],
+        name: "Filter by category: "
+      }
+    }
+  ],
   data: { url: BASE + "smoking_demographics.csv" },
-  facet: {
-    field: "category",
-    type: "nominal",
-    columns: 3,
-    header: {
-      title: null,
-      labelFontSize: 12,
-      labelFontWeight: "bold",
-      labelColor: "#4a3f30",
+  transform: [
+    {
+      filter: "category_selection == null || datum.category == category_selection"
+    }
+  ],
+  layer: [
+    {
+      mark: { type: "bar", cornerRadiusEnd: 4 },
+      encoding: {
+        y: {
+          field: "group",
+          type: "nominal",
+          title: null,
+          sort: { field: "prevalence_pct", op: "max", order: "descending" },
+          axis: { labelFontSize: 12 }
+        },
+        x: {
+          field: "prevalence_pct",
+          type: "quantitative",
+          title: "Smoking Prevalence (%)",
+          scale: { domain: [0, 45] }
+        },
+        color: {
+          field: "category",
+          type: "nominal",
+          scale: {
+            domain: ["gender", "age_group", "ethnicity", "education", "residence"],
+            range: ["#e63946", "#457b9d", "#2a9d8f", "#e9c46a", "#f4a261"]
+          },
+          legend: { title: "Category" }
+        },
+        tooltip: [
+          { field: "category", title: "Category" },
+          { field: "group", title: "Group" },
+          { field: "prevalence_pct", title: "Prevalence (%)" },
+          { field: "source", title: "Source" }
+        ]
+      }
     },
-  },
-  spec: {
-    width: 180,
-    height: 130,
-    layer: [
-      {
-        mark: { type: "bar", color: "#e63946", cornerRadiusEnd: 3 },
-        encoding: {
-          x: {
-            field: "prevalence_pct",
-            type: "quantitative",
-            title: "Prevalence (%)",
-            axis: { labelFontSize: 10 },
-          },
-          y: {
-            field: "group",
-            type: "nominal",
-            title: null,
-            sort: { field: "prevalence_pct", op: "max", order: "descending" },
-            axis: { labelFontSize: 11 },
-          },
-          opacity: {
-            condition: {
-              test: "datum.prevalence_pct > 20",
-              value: 1,
-            },
-            value: 0.65,
-          },
-          tooltip: [
-            { field: "category", title: "Category" },
-            { field: "group", title: "Group" },
-            { field: "prevalence_pct", title: "Prevalence (%)" },
-            { field: "source", title: "Source" },
-          ],
-        },
+    {
+      mark: {
+        type: "text",
+        align: "left",
+        dx: 5,
+        fontSize: 11,
+        fontWeight: "bold",
+        color: "#4a3f30"
       },
-      {
-        mark: {
-          type: "text",
-          align: "left",
-          dx: 3,
-          fontSize: 10,
-          color: "#4a3f30",
+      encoding: {
+        y: {
+          field: "group",
+          type: "nominal",
+          sort: { field: "prevalence_pct", op: "max", order: "descending" }
         },
-        encoding: {
-          x: { field: "prevalence_pct", type: "quantitative" },
-          y: {
-            field: "group",
-            type: "nominal",
-            sort: { field: "prevalence_pct", op: "max", order: "descending" },
-          },
-          text: { field: "prevalence_pct", format: ".1f" },
-        },
-      },
-    ],
-  },
+        x: { field: "prevalence_pct", type: "quantitative" },
+        text: { field: "prevalence_pct", format: ".1f" }
+      }
+    }
+  ]
 });
 
 // ── Chart 8: Male vs Female Smoking Trend ─────────────────────
