@@ -337,25 +337,68 @@ p strong {
   h2 { font-size: 1.4rem; }
 }
 
+/* ── Sticky Navigation Bar ─────────────────────────────────── */
 .top-nav {
   position: sticky;
   top: 0;
   background: var(--paper);
   border-bottom: 1px solid var(--rule);
-  padding: 0.75rem 2rem;
+  padding: 0.65rem 2rem;
   display: flex;
-  gap: 2rem;
+  align-items: center;
+  gap: 1.75rem;
   z-index: 100;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  flex-wrap: wrap;
+}
+
+.top-nav .nav-title {
+  color: var(--ink);
+  font-weight: 600;
+  margin-right: 0.5rem;
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--rule);
+  white-space: nowrap;
 }
 
 .top-nav a {
   color: var(--ink-faint);
   text-decoration: none;
   transition: color 0.2s;
+  white-space: nowrap;
 }
 
 .top-nav a:hover { color: var(--accent); }
+
+/* ── Key Insight Box ────────────────────────────────────────── */
+.key-insight {
+  background: var(--paper-warm);
+  border-left: 3px solid var(--gold);
+  padding: 0.75rem 1.25rem;
+  margin: 0.75rem 0 1.5rem;
+  max-width: var(--col-w);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--ink);
+  border-radius: 0 2px 2px 0;
+}
+
+.key-insight strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ── Transition Sentence ────────────────────────────────────── */
+.transition {
+  font-style: italic;
+  color: var(--ink-faint);
+  font-size: 0.92rem;
+  max-width: var(--col-w);
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--rule);
+  line-height: 1.6;
+}
