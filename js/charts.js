@@ -341,8 +341,8 @@ vegaEmbed("#demographics", {
     header: { title: null },
   },
   spec: {
-    width: 250,
-    height: 120,
+    width: 300,
+    height: 150,
     mark: { type: "bar", color: "#e63946" },
     encoding: {
       x: {
