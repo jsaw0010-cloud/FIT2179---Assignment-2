@@ -225,6 +225,16 @@ p strong {
   max-width: 100%;
 }
 
+/* Hide the Vega "..." action menu button — removes blank space below charts */
+.vega-embed summary {
+  display: none !important;
+}
+
+/* Remove extra padding Vega adds inside the embed container */
+.vega-embed.has-actions {
+  padding-right: 0 !important;
+}
+
 /* ── Horizontal rule / section divider ──────────────────────── */
 .rule-divider {
   border: none;
@@ -326,6 +336,3 @@ p strong {
   .stat-item:last-child { border-bottom: none; }
   h2 { font-size: 1.4rem; }
 }
-
-.vega-embed summary { display: none; }
-
