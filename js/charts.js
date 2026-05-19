@@ -722,9 +722,10 @@ vegaEmbed("#tax_vs_illicit", {
           type: "quantitative",
           title: "Illicit Market Share (%)",
           axis: { titleColor: "#c1121f", labelColor: "#c1121f" },
-          scale: { domain: [30, 72] },
+          scale: { domain: [30, 72] }
         },
-      },
+        y2: { datum: 30 }
+      }
     },
     {
       data: { url: BASE + "illicit_cigarettes_trend.csv" },
