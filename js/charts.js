@@ -1,7 +1,7 @@
 const BASE =
   "https://raw.githubusercontent.com/jsaw0010-cloud/FIT2179---Assignment-2/main/data/";
 
-// ── Chart 1: Choropleth Map with legend highlight ──────────────
+// ── Chart 1: Zoomable Choropleth Map ──────────────────────────
 vegaEmbed("#choropleth", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Smoking Prevalence by Malaysian State (2019)",
@@ -9,13 +9,52 @@ vegaEmbed("#choropleth", {
   height: 420,
   params: [
     {
-      name: "state_highlight",
-      select: { type: "point", fields: ["above_national_avg"] },
-      bind: "legend"
+      name: "zoom_level",
+      value: 1800,
+      bind: {
+        input: "range",
+        min: 800,
+        max: 5000,
+        step: 100,
+        name: "Zoom: "
+      }
+    },
+    {
+      name: "center_to",
+      value: [109.5, 3.5],
+      bind: {
+        input: "select",
+        options: [
+          [109.5, 3.5],
+          [101.5, 3.1],
+          [116.0, 5.5],
+          [103.8, 1.5]
+        ],
+        labels: ["All Malaysia", "Peninsular Malaysia", "Sabah / Sarawak", "Southern Peninsular"],
+        name: "Map Centre: "
+      }
     }
   ],
-  projection: { type: "mercator" },
+  projection: {
+    type: "mercator",
+    center: { expr: "center_to" },
+    scale: { expr: "zoom_level" }
+  },
   layer: [
+    {
+      data: {
+        url: BASE + "malaysia_state.topojson",
+        format: { type: "topojson", feature: "states" }
+      },
+      transform: [
+        {
+          calculate: "'No data available for ' + datum.properties.Name",
+          as: "note"
+        }
+      ],
+      mark: { type: "geoshape", fill: "#ddd", stroke: "white", strokeWidth: 1 },
+      encoding: { tooltip: { field: "note" } }
+    },
     {
       data: {
         url: BASE + "malaysia_state.topojson",
@@ -27,7 +66,7 @@ vegaEmbed("#choropleth", {
           from: {
             data: { url: BASE + "smoking_by_state_2019.csv" },
             key: "state",
-            fields: ["smoking_rate_pct", "above_national_avg"]
+            fields: ["smoking_rate_pct", "above_national_avg", "region"]
           }
         }
       ],
@@ -40,20 +79,16 @@ vegaEmbed("#choropleth", {
           scale: { scheme: "reds", domain: [10, 30] },
           legend: { orient: "bottom-right" }
         },
-        opacity: {
-          condition: { param: "state_highlight", value: 1 },
-          value: 0.2
-        },
         tooltip: [
           { field: "properties.Name", title: "State" },
           { field: "smoking_rate_pct", title: "Smoking Rate (%)" },
+          { field: "region", title: "Region" },
           { field: "above_national_avg", title: "Above national avg?" }
         ]
       }
     }
   ]
 });
-
 // ── Chart 2: Smoking Trend Line Chart ──────────────────────────
 vegaEmbed("#line_trend", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
