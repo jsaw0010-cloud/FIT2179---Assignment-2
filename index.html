@@ -1,59 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Economics of Sin Taxes in Malaysia</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Hidden Cost of Cheap Cigarettes — Malaysia's Sin Tax Dilemma</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
 
-    <!-- Vega-Lite libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+<div class="page-wrap">
 
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <h1>The Economics of Sin Taxes in Malaysia</h1>
-    <p class="subtitle">
-      Alcohol, Tobacco, and the Price of Public Health
+  <!-- ── Masthead ── -->
+  <header class="masthead">
+    <p class="kicker">Data Visualisation 2 · FIT2179 · Monash University Malaysia</p>
+    <h1>The Hidden Cost of <em>Cheap Cigarettes</em></h1>
+    <p class="deck">
+      Malaysia taxes tobacco heavily — yet more than half of all cigarettes sold are
+      smuggled, untaxed, and cheap. This is the story of how a well-intentioned sin
+      tax created one of the world's largest illicit cigarette markets.
     </p>
+    <p class="byline">By [Your Name] &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; Data: NHMS 2019, GATS-M 2023, ICS/Nielsen Malaysia</p>
+  </header>
 
-    <!-- Each div is one visualisation -->
-    <div class="section">
-      <h2>Smoking Prevalence by State (2019)</h2>
+  <!-- ── Pull stats ── -->
+  <div class="stat-row">
+    <div class="stat-item">
+      <span class="num">19%</span>
+      <span class="label">of Malaysian adults smoke — down from 23% in 2011</span>
+    </div>
+    <div class="stat-item">
+      <span class="num">55%</span>
+      <span class="label">of cigarettes sold in Malaysia are illicit (2024)</span>
+    </div>
+    <div class="stat-item">
+      <span class="num">RM 4–8</span>
+      <span class="label">black market price vs RM 9–12 for a legal pack</span>
+    </div>
+    <div class="stat-item">
+      <span class="num">42 sen</span>
+      <span class="label">excise duty per stick since Budget 2026</span>
+    </div>
+  </div>
+
+  <!-- ── Section 1: Map ── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">01 — Where</span>
+      <h2>Smoking is not evenly spread across Malaysia</h2>
+    </div>
+    <p>
+      The burden of tobacco use falls heaviest on the northern and east coast states.
+      <strong>Kedah leads at 27.6%</strong>, nearly double the rate in Putrajaya (12.3%).
+      Rural states consistently show higher prevalence, reflecting income levels,
+      enforcement gaps, and easier access to cheap contraband cigarettes.
+    </p>
+    <div class="chart-wrap">
       <div id="choropleth"></div>
+      <p class="chart-caption">Fig. 1 — Smoking prevalence (%) by Malaysian state. Source: National Health and Morbidity Survey (NHMS) 2019, Institute for Public Health Malaysia.</p>
     </div>
+    <div class="findings-box">
+      <p class="findings-title">Key finding</p>
+      <ul>
+        <li>States above the national average (21.3%) are concentrated in the north and east coast</li>
+        <li>Urban federal territories (KL, Putrajaya) show the lowest rates, partly due to stricter enforcement</li>
+        <li>East Malaysia (Sabah 25.3%) bucks the rural trend due to high contraband inflow via sea borders</li>
+      </ul>
+    </div>
+  </section>
 
-    <div class="section">
-      <h2>National Smoking Trend Over Time</h2>
+  <hr class="rule-divider" />
+
+  <!-- ── Section 2: Trend ── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">02 — When</span>
+      <h2>Smoking has been declining — but too slowly to meet targets</h2>
+    </div>
+    <p>
+      Malaysia set a national target of <strong>15% smoking prevalence by 2025</strong>.
+      The 2023 rate of 19% shows progress — four percentage points lower than 2011 —
+      but the country remains well off track. At the current pace, the 15% target may
+      not be reached until after 2030.
+    </p>
+    <div class="chart-wrap">
       <div id="line_trend"></div>
+      <p class="chart-caption">Fig. 2 — National smoking prevalence among adults aged 15+, 2011–2023. Sources: GATS 2011, NHMS 2015 &amp; 2019, GATS-M 2023.</p>
     </div>
+    <div class="pullquote">
+      <p>"The 2015–2016 tax hike was the single biggest push — but its gains were immediately undermined by the surge in contraband supply."</p>
+    </div>
+  </section>
 
-    <div class="section">
-      <h2>Excise Duty Rates</h2>
+  <hr class="rule-divider" />
+
+  <!-- ── Section 3: Tax ── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">03 — The Tax</span>
+      <h2>Excise duty was raised sharply in 2015–16, then frozen</h2>
+    </div>
+    <p>
+      For most of the 2000s, Malaysia taxed cigarettes at just 8–10 sen per stick.
+      A dramatic restructuring in 2015 (to 20 sen) and 2016 (to 40 sen) more than
+      quadrupled the rate in two years. Then came a <strong>seven-year freeze</strong>
+      as the government grappled with political fallout from the illicit market boom.
+      Budget 2026 finally added 2 sen more — a modest step.
+    </p>
+    <div class="chart-wrap">
       <div id="excise_bar"></div>
+      <p class="chart-caption">Fig. 3 — Cigarette excise duty rate (sen per stick), 2004–2025. Source: Royal Malaysian Customs Department (RMCD) / Budget documents.</p>
     </div>
+  </section>
 
-    <div class="section">
-      <h2>Sin Tax Revenue: Tobacco vs Alcohol</h2>
+  <hr class="rule-divider" />
+
+  <!-- ── Section 4: Revenue ── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">04 — The Revenue</span>
+      <h2>Sin taxes generate billions — but tobacco dominates</h2>
+    </div>
+    <p>
+      Together, tobacco and alcohol excise duties contributed over RM 5.8 billion
+      to government revenue by 2017. Tobacco alone accounts for roughly 75–80% of
+      this total. While the revenue case for sin taxes is often cited by policymakers,
+      alcohol revenue has barely grown — partly because Malaysia's Muslim-majority
+      population already has low consumption rates.
+    </p>
+    <div class="chart-wrap">
       <div id="sin_tax_revenue"></div>
+      <p class="chart-caption">Fig. 4 — Government excise revenue from tobacco and alcohol (MYR million), 2012–2017. Source: Galen Centre for Health and Social Policy / Ministry of Finance Malaysia.</p>
     </div>
-    
-    <div class="section">
-      <h2>Illicit Cigarette Market Share</h2>
-      <div id="illicit_trend"></div>
-    </div>
-    
-    <div class="section">
-      <h2>Cigarette Prices Across ASEAN</h2>
-      <div id="asean_prices"></div>
-    </div>
-    
-    <div class="section">
-      <h2>Smoking Prevalence by Demographic Group</h2>
-      <div id="demographics"></div>
-    </div>
+  </section>
 
-    <script src="js/charts.js"></script>
-  </body>
+  <hr class="rule-divider" />
+
+  <!-- ── Section 5: Illicit ── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">05 — The Unintended Consequence</span>
+      <h2>Higher taxes fuelled a contraband explosion</h2>
+    </div>
+    <p>
+      The 2015–2016 tax hikes created an enormous price gap between legal and
+      illegal cigarettes. Smugglers — mostly from duty-free zones in Labuan, Langkawi,
+      and cross-border networks with Indonesia — flooded the market with cheap
+      contraband. By 2020, <strong>nearly 2 in 3 cigarettes</strong> sold in Malaysia
+      were illicit. Enforcement has since clawed back some ground, with the moratorium
+      on new brands introduced in 2023 helping to stabilise the figure at 55%.
+    </p>
+    <div class="chart-wrap">
+      <div id="illicit_trend"></div>
+      <p class="chart-caption">Fig. 5 — Illicit cigarette market share (%), 2015–2024. Source: Illicit Cigarette Study (ICS), Nielsen Malaysia / Confederation of Malaysian Tobacco Manufacturers.</p>
+    </div>
+    <div class="findings-box">
+      <p class="findings-title">Why this matters</p>
+      <ul>
+        <li>Illicit cigarettes bypass health warnings, age restrictions, and tar limits</li>
+        <li>Government loses an estimated RM 4–5 billion in foregone excise revenue annually</li>
+        <li>Low contraband prices directly undercut the tax's deterrent effect on smokers</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="rule-divider" />
+
+  <!-- ── Section 6: ASEAN ── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">06 — Regional Context</span>
+      <h2>Malaysia's legal cigarettes are cheap by ASEAN standards — except compared to contraband</h2>
+    </div>
+    <p>
+      A legal pack of cigarettes in Malaysia costs around USD 2.60 — far below
+      Singapore's USD 13.50 but above Indonesia's USD 2.10. The critical issue is
+      not the absolute price but the <strong>gap between legal and illicit</strong>.
+      Malaysia's black market pack sells for USD 1.10 — less than half the legal price.
+      No other ASEAN country has a comparable illicit market size.
+    </p>
+    <div class="chart-wrap">
+      <div id="asean_prices"></div>
+      <p class="chart-caption">Fig. 6 — Legal and illicit cigarette pack prices (USD) across ASEAN, 2023. Sources: WHO Tobacco Control Data, industry reports.</p>
+    </div>
+  </section>
+
+  <hr class="rule-divider" />
+
+  <!-- ── Section 7: Demographics ── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">07 — Who Smokes</span>
+      <h2>Smoking is overwhelmingly a male, lower-education phenomenon</h2>
+    </div>
+    <p>
+      Malaysia's smoking demographics reveal stark disparities. Men smoke at 35.7% —
+      versus just 1.5% for women — one of the widest gender gaps in the world.
+      Adults aged 25–44 have the highest rates, while those with only primary
+      education smoke at three times the rate of university graduates. Rural residents
+      smoke significantly more than urban dwellers, reflecting both income and
+      enforcement differences.
+    </p>
+    <div class="chart-wrap">
+      <div id="demographics"></div>
+      <p class="chart-caption">Fig. 7 — Smoking prevalence (%) by demographic group. Sources: NHMS 2019, GATS-M 2023, Institute for Public Health Malaysia.</p>
+    </div>
+  </section>
+
+  <hr class="rule-divider thick" />
+
+  <!-- ── Sources ── -->
+  <footer class="sources">
+    <h3>Data Sources &amp; References</h3>
+    <ol>
+      <li>Institute for Public Health (2024). <em>National Health and Morbidity Survey (NHMS) 2023: Non-Communicable Diseases — Key Findings.</em> Ministry of Health Malaysia. <a href="https://iku.nih.gov.my/nhms" target="_blank">iku.nih.gov.my/nhms</a></li>
+      <li>World Health Organization (2024). <em>Global Adult Tobacco Survey — Malaysia 2023 (GATS-M 2023) Fact Sheet.</em> <a href="https://cdn.who.int/media/docs/default-source/ncds/ncd-surveillance/data-reporting/malaysia/mys-gats2023-factsheet.pdf" target="_blank">WHO</a></li>
+      <li>Nielsen Malaysia / Confederation of Malaysian Tobacco Manufacturers (2024). <em>Illicit Cigarettes Study (ICS) 2024.</em> BAT Malaysia.</li>
+      <li>Galen Centre for Health and Social Policy. <em>Sin Tax Revenue Data, Malaysia 2012–2017.</em></li>
+      <li>Royal Malaysian Customs Department (RMCD). <em>Excise Duty Rates, Historical 2004–2025.</em></li>
+      <li>Our World in Data (2024). <em>Smoking Prevalence, ASEAN countries.</em> <a href="https://ourworldindata.org/smoking" target="_blank">ourworldindata.org/smoking</a></li>
+    </ol>
+    <p style="margin-top:1.5rem; font-size:0.78rem; color:var(--ink-faint);">
+      Authored by [Your Name] · FIT2179 Data Visualisation 2 · Monash University Malaysia · May 2026 ·
+      AI tools (Claude) were used to assist with code generation, data structuring, and grammar checking. All data is sourced from publicly available datasets.
+    </p>
+  </footer>
+
+</div><!-- /page-wrap -->
+
+<script src="js/charts.js"></script>
+</body>
 </html>
