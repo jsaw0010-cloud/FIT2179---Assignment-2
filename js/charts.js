@@ -365,3 +365,238 @@ vegaEmbed("#demographics", {
     },
   },
 });
+
+// ── Chart 8: Male vs Female Smoking Trend ─────────────────────
+vegaEmbed("#gender_trend", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  title: "Male vs Female Smoking Prevalence in Malaysia (2011–2023)",
+  width: 600,
+  height: 300,
+  data: { url: BASE + "smoking_trend_national.csv" },
+  transform: [
+    {
+      fold: ["prevalence_male", "prevalence_female"],
+      as: ["gender", "prevalence"]
+    }
+  ],
+  mark: { type: "line", point: true },
+  encoding: {
+    x: {
+      field: "year",
+      type: "ordinal",
+      title: "Year"
+    },
+    y: {
+      field: "prevalence",
+      type: "quantitative",
+      title: "Prevalence (%)",
+      scale: { zero: false }
+    },
+    color: {
+      field: "gender",
+      type: "nominal",
+      scale: {
+        domain: ["prevalence_male", "prevalence_female"],
+        range: ["#457b9d", "#e63946"]
+      },
+      legend: {
+        title: "Gender",
+        labelExpr: "datum.label === 'prevalence_male' ? 'Male' : 'Female'"
+      }
+    },
+    strokeWidth: {
+      field: "gender",
+      type: "nominal",
+      scale: {
+        domain: ["prevalence_male", "prevalence_female"],
+        range: [3, 1.5]
+      },
+      legend: null
+    },
+    tooltip: [
+      { field: "year", title: "Year" },
+      { field: "gender", title: "Gender" },
+      { field: "prevalence", title: "Prevalence (%)" },
+      { field: "source", title: "Source" }
+    ]
+  }
+});
+
+// ── Chart 9: Smoking by Ethnicity ─────────────────────────────
+vegaEmbed("#ethnicity_bar", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  title: "Smoking Prevalence by Ethnicity in Malaysia (2019)",
+  width: 500,
+  height: 220,
+  data: {
+    values: [
+      { ethnicity: "Malay",            prevalence: 22.6 },
+      { ethnicity: "Other Bumiputra",  prevalence: 21.7 },
+      { ethnicity: "Indian",           prevalence: 11.5 },
+      { ethnicity: "Chinese",          prevalence: 13.7 }
+    ]
+  },
+  mark: {
+    type: "bar",
+    cornerRadiusEnd: 4
+  },
+  encoding: {
+    y: {
+      field: "ethnicity",
+      type: "nominal",
+      title: null,
+      sort: { field: "prevalence", order: "descending" }
+    },
+    x: {
+      field: "prevalence",
+      type: "quantitative",
+      title: "Smoking Prevalence (%)",
+      scale: { domain: [0, 30] }
+    },
+    color: {
+      field: "prevalence",
+      type: "quantitative",
+      scale: { scheme: "reds", domain: [10, 25] },
+      legend: null
+    },
+    tooltip: [
+      { field: "ethnicity", title: "Ethnicity" },
+      { field: "prevalence", title: "Prevalence (%)" }
+    ]
+  },
+  layer: [
+    {
+      mark: { type: "bar", cornerRadiusEnd: 4 },
+      encoding: {
+        y: {
+          field: "ethnicity",
+          type: "nominal",
+          sort: { field: "prevalence", order: "descending" }
+        },
+        x: {
+          field: "prevalence",
+          type: "quantitative",
+          scale: { domain: [0, 30] }
+        },
+        color: {
+          field: "prevalence",
+          type: "quantitative",
+          scale: { scheme: "reds", domain: [10, 25] },
+          legend: null
+        },
+        tooltip: [
+          { field: "ethnicity", title: "Ethnicity" },
+          { field: "prevalence", title: "Prevalence (%)" }
+        ]
+      }
+    },
+    {
+      mark: {
+        type: "text",
+        align: "left",
+        dx: 5,
+        fontSize: 12,
+        color: "#4a3f30"
+      },
+      encoding: {
+        y: {
+          field: "ethnicity",
+          type: "nominal",
+          sort: { field: "prevalence", order: "descending" }
+        },
+        x: { field: "prevalence", type: "quantitative" },
+        text: { field: "prevalence", format: ".1f" }
+      }
+    }
+  ]
+});
+
+// ── Chart 10: Tax Rate vs Illicit Market Share ────────────────
+vegaEmbed("#tax_vs_illicit", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  title: "Excise Duty vs Illicit Market Share (2015–2024)",
+  width: 600,
+  height: 320,
+  resolve: { scale: { y: "independent" } },
+  layer: [
+    {
+      data: { url: BASE + "illicit_cigarettes_trend.csv" },
+      mark: { type: "area", opacity: 0.15, color: "#e63946" },
+      encoding: {
+        x: { field: "year", type: "ordinal", title: "Year" },
+        y: {
+          field: "illicit_share_pct",
+          type: "quantitative",
+          title: "Illicit Market Share (%)",
+          axis: { titleColor: "#e63946" },
+          scale: { domain: [30, 72] }
+        }
+      }
+    },
+    {
+      data: { url: BASE + "illicit_cigarettes_trend.csv" },
+      mark: { type: "line", point: true, color: "#e63946", strokeWidth: 2 },
+      encoding: {
+        x: { field: "year", type: "ordinal" },
+        y: {
+          field: "illicit_share_pct",
+          type: "quantitative",
+          scale: { domain: [30, 72] }
+        },
+        tooltip: [
+          { field: "year", title: "Year" },
+          { field: "illicit_share_pct", title: "Illicit Share (%)" }
+        ]
+      }
+    },
+    {
+      data: { url: BASE + "excise_duty_rates.csv" },
+      transform: [
+        { filter: "datum.year >= 2015" }
+      ],
+      mark: {
+        type: "line",
+        point: true,
+        color: "#457b9d",
+        strokeWidth: 2,
+        strokeDash: [5, 3]
+      },
+      encoding: {
+        x: { field: "year", type: "ordinal" },
+        y: {
+          field: "duty_per_stick_sen",
+          type: "quantitative",
+          title: "Duty per Stick (sen)",
+          axis: { titleColor: "#457b9d" },
+          scale: { domain: [15, 50] }
+        },
+        tooltip: [
+          { field: "year", title: "Year" },
+          { field: "duty_per_stick_sen", title: "Duty (sen/stick)" },
+          { field: "notes", title: "Notes" }
+        ]
+      }
+    },
+    {
+      data: {
+        values: [
+          { year: "2015", y: 68, label: "Tax jumps to 20 sen" },
+          { year: "2016", y: 64, label: "Tax jumps to 40 sen" }
+        ]
+      },
+      mark: {
+        type: "text",
+        align: "left",
+        dx: 5,
+        fontSize: 10,
+        fontWeight: "bold",
+        color: "#457b9d"
+      },
+      encoding: {
+        x: { field: "year", type: "ordinal" },
+        y: { field: "y", type: "quantitative", scale: { domain: [30, 72] } },
+        text: { field: "label" }
+      }
+    }
+  ]
+});
