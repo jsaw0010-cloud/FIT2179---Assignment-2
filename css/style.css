@@ -24,8 +24,8 @@
   --font-body:    'Source Serif 4', Georgia, serif;
   --font-mono:    'JetBrains Mono', monospace;
 
-  --max-w: 900px;
-  --col-w: 660px;
+  --max-w: 1100px;
+  --col-w: 820px;
 }
 
 /* ── Reset & Base ───────────────────────────────────────────── */
@@ -35,7 +35,7 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 300;
   line-height: 1.8;
   color: var(--ink);
@@ -402,3 +402,46 @@ p strong {
   border-top: 1px dashed var(--rule);
   line-height: 1.6;
 }
+
+/* ── Two-column section layout ──────────────────────────────── */
+/* Wrap intro text + findings box side-by-side on wide screens  */
+.section-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  margin-bottom: 1.5rem;
+  align-items: start;
+}
+
+/* On narrow screens fall back to single column */
+@media (max-width: 760px) {
+  .section-intro { grid-template-columns: 1fr; }
+}
+
+/* When there is no findings box, span full width */
+.section-intro.single { grid-template-columns: 1fr; }
+
+/* Stat row — wider on bigger page */
+.stat-row { flex-wrap: nowrap; }
+
+/* Chart wrap — allow full width */
+.chart-wrap {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+/* p max-width follows col-w now set to 820px */
+p { max-width: var(--col-w); }
+
+/* Slightly larger body text for readability */
+.section p {
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+/* Pull quote wider */
+.pullquote { max-width: 700px; }
