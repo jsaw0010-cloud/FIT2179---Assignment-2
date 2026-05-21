@@ -445,3 +445,58 @@ p { max-width: var(--col-w); }
 
 /* Pull quote wider */
 .pullquote { max-width: 700px; }
+
+/* ── Two-column section: text left, chart right ─────────────── */
+.section-body {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+
+.section-body .left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section-body .right-col .chart-wrap {
+  margin: 0;
+}
+
+/* Sections where the chart needs full width (map, brushable chart) */
+.section-body.full-width {
+  grid-template-columns: 1fr;
+}
+
+/* Key insight inline in left col looks better slightly smaller */
+.section-body .key-insight {
+  font-size: 0.88rem;
+}
+
+/* Transition at full width below the two-col grid */
+.section-body + .transition { margin-top: 1.25rem; }
+
+@media (max-width: 800px) {
+  .section-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Side-by-side: text left, chart right ───────────────────── */
+.side-by-side {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 2rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+
+.side-by-side .text-col { display: flex; flex-direction: column; gap: 1rem; }
+.side-by-side .chart-col { min-width: 0; }
+.side-by-side .chart-col .chart-wrap { margin: 0; }
+
+@media (max-width: 820px) {
+  .side-by-side { grid-template-columns: 1fr; }
+}
