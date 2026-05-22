@@ -4,14 +4,14 @@ const BASE =
 // COLOUR SYSTEM
 // Chart 1  — Reds scheme (choropleth, sequential quantitative)
 // Chart 2  — Steel blue #1a6b8a (trend line, informational)
-// Chart 3  — Forest green #2c6e49 (tax/fiscal policy bars)
+// Chart 3  — Orange #e07b00 (tax/fiscal policy bars — colourblind-safe with blue & red)
 // Chart 4  — Purple #7b2d8b (tobacco) + Amber #d4a017 (alcohol)
 // Chart 5  — Crimson #c0392b (illicit/danger signal)
 // Chart 6  — Steel blue (legal) + Crimson (illicit) — intentional semantic reuse
 // Chart 7  — 5-category palette (each category gets a distinct colour)
 // Chart 8  — Steel blue (male) + Terracotta #e07b54 (female)
 // Chart 9  — Blues sequential scheme (neutral categorical)
-// Chart 10 — Crimson (illicit) + Forest green (tax/fiscal)
+// Chart 10 — Crimson (illicit) + Orange #e07b00 (tax/fiscal) — colourblind-safe pair
 
 // ── Chart 1: Zoomable Choropleth Map ──────────────────────────
 vegaEmbed("#choropleth", {
@@ -113,12 +113,12 @@ vegaEmbed("#line_trend", {
     },
     {
       data: { values: [{ year: "2027", target: 15 }] },
-      mark: { type: "rule", strokeDash: [6, 4], color: "#2c6e49", strokeWidth: 1.5 },
+      mark: { type: "rule", strokeDash: [6, 4], color: "#e07b00", strokeWidth: 1.5 },
       encoding: { y: { field: "target", type: "quantitative" } }
     },
     {
       data: { values: [{ year: "2011", target: 15 }] },
-      mark: { type: "text", align: "left", dx: 4, dy: -8, fontSize: 10, color: "#2c6e49", fontWeight: "bold" },
+      mark: { type: "text", align: "left", dx: 4, dy: -8, fontSize: 10, color: "#e07b00", fontWeight: "bold" },
       encoding: {
         x: { field: "year", type: "ordinal" },
         y: { field: "target", type: "quantitative" },
@@ -137,7 +137,7 @@ vegaEmbed("#excise_bar", {
   layer: [
     {
       data: { url: BASE + "excise_duty_rates.csv" },
-      mark: { type: "bar", color: "#2c6e49" },
+      mark: { type: "bar", color: "#e07b00" },
       encoding: {
         x: { field: "year", type: "ordinal", title: "Year" },
         y: { field: "duty_per_stick_sen", type: "quantitative", title: "Duty per Stick (sen)" },
@@ -151,12 +151,12 @@ vegaEmbed("#excise_bar", {
     },
     {
       data: { values: [{ year: "2015", duty: 22 }] },
-      mark: { type: "text", align: "center", dy: -12, fontSize: 11, color: "#1a4a2e", fontWeight: "bold" },
+      mark: { type: "text", align: "center", dy: -12, fontSize: 11, color: "#b35900", fontWeight: "bold" },
       encoding: { x: { field: "year", type: "ordinal" }, y: { field: "duty", type: "quantitative" }, text: { value: "+67%" } }
     },
     {
       data: { values: [{ year: "2016", duty: 43 }] },
-      mark: { type: "text", align: "center", dy: -12, fontSize: 11, color: "#1a4a2e", fontWeight: "bold" },
+      mark: { type: "text", align: "center", dy: -12, fontSize: 11, color: "#b35900", fontWeight: "bold" },
       encoding: { x: { field: "year", type: "ordinal" }, y: { field: "duty", type: "quantitative" }, text: { value: "+100%" } }
     },
     {
@@ -235,7 +235,7 @@ vegaEmbed("#illicit_trend", {
         },
         {
           data: { values: [{ year: "2023" }] },
-          mark: { type: "rule", strokeDash: [5, 4], color: "#2c6e49", strokeWidth: 1.5 },
+          mark: { type: "rule", strokeDash: [5, 4], color: "#e07b00", strokeWidth: 1.5 },
           encoding: { x: { field: "year", type: "ordinal" } }
         },
         {
@@ -251,7 +251,7 @@ vegaEmbed("#illicit_trend", {
             text: { field: "label" },
             color: {
               field: "label", type: "nominal",
-              scale: { domain: ["2015–16 Tax Hike","Peak: 63.8%","Moratorium"], range: ["#922b21","#555","#2c6e49"] },
+              scale: { domain: ["2015–16 Tax Hike","Peak: 63.8%","Moratorium"], range: ["#922b21","#555","#e07b00"] },
               legend: null
             }
           }
@@ -329,7 +329,7 @@ vegaEmbed("#demographics", {
           field: "category", type: "nominal",
           scale: {
             domain: ["gender","age_group","ethnicity","education","residence"],
-            range: ["#c0392b","#1a6b8a","#2c6e49","#d4a017","#7b2d8b"]
+            range: ["#c0392b","#1a6b8a","#e07b00","#d4a017","#7b2d8b"]
           },
           legend: { title: "Category" }
         },
@@ -462,7 +462,7 @@ vegaEmbed("#tax_vs_illicit", {
       mark: { type: "area", opacity: 0.1, color: "#c0392b" },
       encoding: {
         x: { field: "year", type: "ordinal" },
-        y: { field: "illicit_share_pct", type: "quantitative", title: "Illicit Market Share (%)", axis: { titleColor: "#922b21", labelColor: "#922b21" }, scale: { domain: [30, 72] } },
+        y: { field: "illicit_share_pct", type: "quantitative", title: "Illicit Market Share (%)", axis: { titleColor: "#922b21", labelColor: "#922b21", orient: "left", titlePadding: 10 }, scale: { domain: [30, 72] } },
         y2: { datum: 30 }
       }
     },
@@ -481,10 +481,10 @@ vegaEmbed("#tax_vs_illicit", {
     {
       data: { url: BASE + "excise_duty_rates.csv" },
       transform: [{ filter: "datum.year >= 2015" }],
-      mark: { type: "line", point: { size: 60, fill: "#2c6e49" }, color: "#2c6e49", strokeWidth: 2.5, strokeDash: [6, 3] },
+      mark: { type: "line", point: { size: 60, fill: "#e07b00" }, color: "#e07b00", strokeWidth: 2.5, strokeDash: [6, 3] },
       encoding: {
         x: { field: "year", type: "ordinal" },
-        y: { field: "duty_per_stick_sen", type: "quantitative", title: "Duty per Stick (sen)", axis: { titleColor: "#1a4a2e", labelColor: "#1a4a2e" }, scale: { domain: [15, 50] } },
+        y: { field: "duty_per_stick_sen", type: "quantitative", title: "Duty per Stick (sen)", axis: { titleColor: "#b35900", labelColor: "#b35900", orient: "right", titlePadding: 12, titleAngle: 90, titleAlign: "center" }, scale: { domain: [15, 50] } },
         tooltip: [
           { field: "year", title: "Year" },
           { field: "duty_per_stick_sen", title: "Duty (sen/stick)" },
@@ -497,7 +497,7 @@ vegaEmbed("#tax_vs_illicit", {
         { year: "2015", y: 68, label: "Tax: 20 sen →" },
         { year: "2016", y: 63, label: "Tax: 40 sen →" }
       ]},
-      mark: { type: "text", align: "left", dx: 5, fontSize: 10, fontWeight: "bold", color: "#1a4a2e" },
+      mark: { type: "text", align: "left", dx: 5, fontSize: 10, fontWeight: "bold", color: "#b35900" },
       encoding: {
         x: { field: "year", type: "ordinal" },
         y: { field: "y", type: "quantitative", scale: { domain: [30, 72] } },
