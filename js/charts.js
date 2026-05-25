@@ -506,3 +506,180 @@ vegaEmbed("#tax_vs_illicit", {
     }
   ]
 });
+
+
+// ── Chart 11: Dumbbell — ASEAN legal vs illicit price gap ─────
+vegaEmbed("#dumbbell", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  title: "Legal vs Illicit Cigarette Price Gap by ASEAN Country (2023)",
+  width: 500,
+  height: 260,
+  data: {
+    values: [
+      { country: "Singapore",  legal: 13.50, illicit: null,  gap: null },
+      { country: "Thailand",   legal: 3.20,  illicit: null,  gap: null },
+      { country: "Malaysia",   legal: 2.60,  illicit: 1.10,  gap: 1.50 },
+      { country: "Indonesia",  legal: 2.10,  illicit: null,  gap: null },
+      { country: "Philippines",legal: 1.80,  illicit: null,  gap: null },
+      { country: "Vietnam",    legal: 1.20,  illicit: null,  gap: null },
+      { country: "Myanmar",    legal: 0.80,  illicit: null,  gap: null }
+    ]
+  },
+  layer: [
+    {
+      transform: [
+        { fold: ["legal", "illicit"], as: ["price_type", "price"] },
+        { filter: "datum.price !== null" }
+      ],
+      mark: { type: "rule", strokeWidth: 3, color: "#c0392b", opacity: 0.4 },
+      encoding: {
+        y: {
+          field: "country", type: "nominal", title: null,
+          sort: { field: "legal", order: "descending" }
+        },
+        x: { field: "legal", type: "quantitative" },
+        x2: { field: "illicit" },
+        tooltip: [
+          { field: "country", title: "Country" },
+          { field: "legal", title: "Legal Price (USD)", format: ".2f" },
+          { field: "illicit", title: "Illicit Price (USD)", format: ".2f" },
+          { field: "gap", title: "Gap (USD)", format: ".2f" }
+        ]
+      }
+    },
+    {
+      transform: [
+        { fold: ["legal", "illicit"], as: ["price_type", "price"] },
+        { filter: "datum.price !== null" }
+      ],
+      mark: { type: "point", filled: true, size: 120 },
+      encoding: {
+        y: {
+          field: "country", type: "nominal",
+          sort: { field: "legal", order: "descending" }
+        },
+        x: { field: "price", type: "quantitative", title: "Price (USD per pack)" },
+        color: {
+          field: "price_type", type: "nominal",
+          scale: { domain: ["legal", "illicit"], range: ["#1a6b8a", "#c0392b"] },
+          legend: { title: "Price Type", labelExpr: "datum.label === 'legal' ? 'Legal' : 'Illicit'" }
+        },
+        tooltip: [
+          { field: "country", title: "Country" },
+          { field: "price_type", title: "Type" },
+          { field: "price", title: "Price (USD)", format: ".2f" }
+        ]
+      }
+    },
+    {
+      transform: [{ filter: "datum.gap !== null" }],
+      mark: {
+        type: "text", align: "left", dx: 8, fontSize: 11,
+        fontWeight: "bold", color: "#c0392b"
+      },
+      encoding: {
+        y: {
+          field: "country", type: "nominal",
+          sort: { field: "legal", order: "descending" }
+        },
+        x: { field: "legal", type: "quantitative" },
+        text: { field: "gap", format: ".2f" }
+      }
+    },
+    {
+      transform: [{ filter: "datum.gap !== null" }],
+      mark: {
+        type: "text", align: "left", dx: 36, fontSize: 9,
+        color: "#c0392b"
+      },
+      encoding: {
+        y: {
+          field: "country", type: "nominal",
+          sort: { field: "legal", order: "descending" }
+        },
+        x: { field: "legal", type: "quantitative" },
+        text: { value: "USD gap" }
+      }
+    }
+  ]
+});
+
+// ── Chart 12: Slope chart — revenue share shift ───────────────
+vegaEmbed("#slope_chart", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  title: "Sin Tax Revenue Share: 2012 vs 2017",
+  width: 280,
+  height: 280,
+  data: {
+    values: [
+      { year: "2012", category: "Tobacco", share: 73.1 },
+      { year: "2017", category: "Tobacco", share: 79.8 },
+      { year: "2012", category: "Alcohol", share: 26.9 },
+      { year: "2017", category: "Alcohol", share: 20.2 }
+    ]
+  },
+  layer: [
+    {
+      mark: { type: "line", strokeWidth: 3 },
+      encoding: {
+        x: {
+          field: "year", type: "ordinal", title: null,
+          axis: { labelFontSize: 13, labelFontWeight: "bold" }
+        },
+        y: {
+          field: "share", type: "quantitative",
+          title: "Share of Sin Tax Revenue (%)",
+          scale: { domain: [0, 100] }
+        },
+        color: {
+          field: "category", type: "nominal",
+          scale: { domain: ["Tobacco", "Alcohol"], range: ["#7b2d8b", "#d4a017"] },
+          legend: { title: "Category" }
+        },
+        detail: { field: "category", type: "nominal" }
+      }
+    },
+    {
+      mark: { type: "point", filled: true, size: 100 },
+      encoding: {
+        x: { field: "year", type: "ordinal" },
+        y: { field: "share", type: "quantitative" },
+        color: {
+          field: "category", type: "nominal",
+          scale: { domain: ["Tobacco", "Alcohol"], range: ["#7b2d8b", "#d4a017"] }
+        },
+        tooltip: [
+          { field: "year", title: "Year" },
+          { field: "category", title: "Category" },
+          { field: "share", title: "Share (%)", format: ".1f" }
+        ]
+      }
+    },
+    {
+      transform: [{ filter: "datum.year === '2012'" }],
+      mark: { type: "text", align: "right", dx: -10, fontSize: 12, fontWeight: "bold" },
+      encoding: {
+        x: { field: "year", type: "ordinal" },
+        y: { field: "share", type: "quantitative" },
+        text: { field: "share", format: ".1f" },
+        color: {
+          field: "category", type: "nominal",
+          scale: { domain: ["Tobacco", "Alcohol"], range: ["#7b2d8b", "#d4a017"] }
+        }
+      }
+    },
+    {
+      transform: [{ filter: "datum.year === '2017'" }],
+      mark: { type: "text", align: "left", dx: 10, fontSize: 12, fontWeight: "bold" },
+      encoding: {
+        x: { field: "year", type: "ordinal" },
+        y: { field: "share", type: "quantitative" },
+        text: { field: "share", format: ".1f" },
+        color: {
+          field: "category", type: "nominal",
+          scale: { domain: ["Tobacco", "Alcohol"], range: ["#7b2d8b", "#d4a017"] }
+        }
+      }
+    }
+  ]
+});
