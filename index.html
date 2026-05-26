@@ -11,14 +11,17 @@
 </head>
 <body>
 
+<!-- ── Nav bar — all 12 sections ── -->
 <nav class="top-nav">
   <span class="nav-title">Sin Tax Malaysia</span>
   <a href="#s1">01 Where</a>
   <a href="#s2">02 Trend</a>
   <a href="#s3">03 The Tax</a>
   <a href="#s4">04 Revenue</a>
+  <a href="#s4b">04b Shift</a>
   <a href="#s5">05 Contraband</a>
   <a href="#s6">06 ASEAN</a>
+  <a href="#s6b">06b Gap</a>
   <a href="#s7">07 Who Smokes</a>
   <a href="#s8">08 Gender</a>
   <a href="#s9">09 Ethnicity</a>
@@ -41,7 +44,7 @@
     <div class="stat-item"><span class="num">42 sen</span><span class="label">excise duty per stick since Budget 2026</span></div>
   </div>
 
-  <!-- ── Section 1: Map — full width (map is wide) ── -->
+  <!-- ── Section 1: Map ── -->
   <section class="section" id="s1">
     <div class="section-header">
       <span class="section-num">01 — Where</span>
@@ -68,7 +71,7 @@
 
   <hr class="rule-divider" />
 
-  <!-- ── Section 2: Trend — text LEFT, chart RIGHT ── -->
+  <!-- ── Section 2: Trend ── -->
   <section class="section" id="s2">
     <div class="section-header">
       <span class="section-num">02 — When</span>
@@ -77,7 +80,7 @@
     <div class="side-by-side">
       <div class="text-col">
         <p>Malaysia set a national target of <strong>15% smoking prevalence by 2025</strong>. The 2023 rate of 19% shows progress — four percentage points lower than 2011 — but the country remains well off track. At the current pace, the 15% target may not be reached until after 2030.</p>
-        <div class="key-insight"><strong>Key insight:</strong> At the current rate of decline, Malaysia will not reach its 15% target until after 2030 — five years late. The green dashed line shows exactly how far off track the country remains.</div>
+        <div class="key-insight"><strong>Key insight:</strong> At the current rate of decline, Malaysia will not reach its 15% target until after 2030 — five years late. The orange dashed line shows exactly how far off track the country remains.</div>
         <div class="pullquote"><p>"The 2015–2016 tax hike was the single biggest push — but its gains were immediately undermined by the surge in contraband supply."</p></div>
       </div>
       <div class="chart-col">
@@ -92,7 +95,7 @@
 
   <hr class="rule-divider" />
 
-  <!-- ── Section 3: Excise — text LEFT, chart RIGHT ── -->
+  <!-- ── Section 3: Excise ── -->
   <section class="section" id="s3">
     <div class="section-header">
       <span class="section-num">03 — The Tax</span>
@@ -115,7 +118,7 @@
 
   <hr class="rule-divider" />
 
-  <!-- ── Section 4: Revenue — text LEFT, chart RIGHT ── -->
+  <!-- ── Section 4: Revenue ── -->
   <section class="section" id="s4">
     <div class="section-header">
       <span class="section-num">04 — The Revenue</span>
@@ -133,12 +136,35 @@
         </div>
       </div>
     </div>
+    <p class="transition">But which category grew its <em>share</em>? The slope chart below shows the shift in proportions.</p>
+  </section>
+
+  <hr class="rule-divider" />
+
+  <!-- ── Section 4b: Slope chart ── -->
+  <section class="section" id="s4b">
+    <div class="section-header">
+      <span class="section-num">04b — Revenue Shift</span>
+      <h2>Tobacco's share of sin tax revenue grew after the 2015 hike</h2>
+    </div>
+    <div class="side-by-side">
+      <div class="text-col">
+        <p>After the 2015–2016 tax hikes, tobacco's share of total sin tax revenue jumped from 73% to nearly 80%. This slope chart shows the shift clearly — each line connects a revenue category's share in 2012 to its share in 2017. Tobacco climbed while alcohol's share shrank, making the government even more financially dependent on tobacco duties.</p>
+        <div class="key-insight"><strong>Key insight:</strong> The 2015 tax hike made Malaysia's government <em>more</em> dependent on tobacco revenue, not less — creating a structural conflict between health policy and fiscal policy.</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-wrap">
+          <div id="slope_chart"></div>
+          <p class="chart-caption">Fig. 11 — Tobacco vs alcohol share of total sin tax revenue, 2012 vs 2017. Source: Galen Centre for Health and Social Policy / Ministry of Finance Malaysia.</p>
+        </div>
+      </div>
+    </div>
     <p class="transition">Revenue rose sharply after the tax hikes — but so did something else entirely. Something the government did not intend.</p>
   </section>
 
   <hr class="rule-divider" />
 
-  <!-- ── Section 5: Illicit — full width (brushable vconcat) ── -->
+  <!-- ── Section 5: Illicit ── -->
   <section class="section" id="s5">
     <div class="section-header">
       <span class="section-num">05 — The Unintended Consequence</span>
@@ -165,7 +191,7 @@
 
   <hr class="rule-divider" />
 
-  <!-- ── Section 6: ASEAN — text LEFT, chart RIGHT ── -->
+  <!-- ── Section 6: ASEAN grouped bar ── -->
   <section class="section" id="s6">
     <div class="section-header">
       <span class="section-num">06 — Regional Context</span>
@@ -183,63 +209,35 @@
         </div>
       </div>
     </div>
+    <p class="transition">The bar chart shows the prices — but the dumbbell chart below makes the <em>gap</em> the visual focus.</p>
+  </section>
+
+  <hr class="rule-divider" />
+
+  <!-- ── Section 6b: Dumbbell chart ── -->
+  <section class="section" id="s6b">
+    <div class="section-header">
+      <span class="section-num">06b — The Price Gap</span>
+      <h2>The gap between legal and illicit prices tells the real story</h2>
+    </div>
+    <div class="side-by-side">
+      <div class="text-col">
+        <p>A standard bar chart shows prices — but it hides the most important number: the <strong>gap</strong> between what a legal and an illicit pack costs in each country. This connected dot plot makes that gap the visual focus. The wider the line, the bigger the incentive to buy contraband. Malaysia's gap is uniquely large for a country of its income level.</p>
+        <div class="key-insight"><strong>Key insight:</strong> Malaysia's price gap of USD 1.50 per pack is the largest in ASEAN relative to its legal price — creating a 58% discount for contraband buyers. No other ASEAN country faces this combination of high tax and weak border enforcement.</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-wrap">
+          <div id="dumbbell"></div>
+          <p class="chart-caption">Fig. 12 — Legal vs illicit cigarette price gap (USD) by ASEAN country, 2023. Sources: WHO Tobacco Control Data, industry reports.</p>
+        </div>
+      </div>
+    </div>
     <p class="transition">Across all these numbers, one question remains: who exactly is still smoking? The answer reveals deep social inequalities.</p>
   </section>
 
   <hr class="rule-divider" />
 
-
-  <!-- ── Section 6b: Dumbbell — ASEAN price gap ── -->
-<section class="section" id="s6b">
-  <div class="section-header">
-    <span class="section-num">06b — The Price Gap</span>
-    <h2>The gap between legal and illicit prices tells the real story</h2>
-  </div>
-  <div class="side-by-side">
-    <div class="text-col">
-      <p>A standard bar chart shows prices — but it hides the most important number: the <strong>gap</strong> between what a legal and an illicit pack costs in each country. This connected dot plot makes that gap the visual focus. The wider the line, the bigger the incentive to buy contraband. Malaysia's gap is uniquely large for a country of its income level.</p>
-      <div class="key-insight"><strong>Key insight:</strong> Malaysia's price gap of USD 1.50 per pack is the largest in ASEAN relative to the legal price — creating a 58% discount for contraband buyers. No other ASEAN country faces this combination of high tax and weak border enforcement.</div>
-    </div>
-    <div class="chart-col">
-      <div class="chart-wrap">
-        <div id="dumbbell"></div>
-        <p class="chart-caption">Fig. 11 — Legal vs illicit cigarette price gap (USD) by ASEAN country, 2023. Sources: WHO Tobacco Control Data, industry reports.</p>
-      </div>
-    </div>
-  </div>
-  <p class="transition">Revenue tells a similar story of unintended gaps — let's look at how the tobacco vs alcohol split shifted over time.</p>
-</section>
-
-  <a href="#s6b">06b Gap</a>
-
-<hr class="rule-divider" />
-
-<!-- ── Section 4b: Slope chart — revenue share ── -->
-<section class="section" id="s4b">
-  <div class="section-header">
-    <span class="section-num">04b — Revenue Shift</span>
-    <h2>Tobacco's share of sin tax revenue grew after the 2015 hike</h2>
-  </div>
-  <div class="side-by-side">
-    <div class="text-col">
-      <p>After the 2015–2016 tax hikes, tobacco's share of total sin tax revenue jumped from 73% to nearly 80%. This slope chart shows the shift clearly — each line connects a revenue category's share in 2012 to its share in 2017. Tobacco climbed while alcohol's share shrank, making the government even more financially dependent on tobacco duties.</p>
-      <div class="key-insight"><strong>Key insight:</strong> The 2015 tax hike made Malaysia's government more dependent on tobacco revenue, not less — creating a structural conflict between health policy and fiscal policy.</div>
-    </div>
-    <div class="chart-col">
-      <div class="chart-wrap">
-        <div id="slope_chart"></div>
-        <p class="chart-caption">Fig. 12 — Tobacco vs alcohol share of total sin tax revenue, 2012 vs 2017. Source: Galen Centre for Health and Social Policy / Ministry of Finance Malaysia.</p>
-      </div>
-    </div>
-  </div>
-  <p class="transition">Across all these numbers, one question remains: who exactly is still smoking?</p>
-</section>
-
-  <a href="#s4b">04b Shift</a>
-
-<hr class="rule-divider" />
-
-  <!-- ── Section 7: Demographics — full width (faceted/tall) ── -->
+  <!-- ── Section 7: Demographics ── -->
   <section class="section" id="s7">
     <div class="section-header">
       <span class="section-num">07 — Who Smokes</span>
@@ -256,7 +254,7 @@
 
   <hr class="rule-divider" />
 
-  <!-- ── Section 8: Gender — text LEFT, chart RIGHT ── -->
+  <!-- ── Section 8: Gender ── -->
   <section class="section" id="s8">
     <div class="section-header">
       <span class="section-num">08 — Gender Gap</span>
@@ -279,7 +277,7 @@
 
   <hr class="rule-divider" />
 
-  <!-- ── Section 9: Ethnicity — text LEFT, chart RIGHT ── -->
+  <!-- ── Section 9: Ethnicity ── -->
   <section class="section" id="s9">
     <div class="section-header">
       <span class="section-num">09 — Ethnicity</span>
@@ -297,19 +295,19 @@
         </div>
       </div>
     </div>
-    <p class="transition">With all demographic patterns established, the final chart brings the central paradox into sharp focus — overlaying the tax rate directly against the illicit market share.</p>
+    <p class="transition">With all demographic patterns established, the final chart brings the central paradox into sharp focus.</p>
   </section>
 
   <hr class="rule-divider" />
 
-  <!-- ── Section 10: Tax vs Illicit — full width (dual axis) ── -->
+  <!-- ── Section 10: Tax vs illicit ── -->
   <section class="section" id="s10">
     <div class="section-header">
       <span class="section-num">10 — The Paradox</span>
       <h2>Every tax hike drove more smokers to the black market</h2>
     </div>
     <div class="section-intro">
-      <p>When excise duty rose steeply in 2015 and 2016, the illicit market share shot up almost in lockstep. This chart overlays both trends — the red line tracks illicit share (left axis), the green dashed line tracks duty rate (right axis). The <strong>direct relationship</strong> between higher tax rates and black market growth is unmistakable. Can Malaysia keep raising tobacco taxes without simply enriching smugglers?</p>
+      <p>When excise duty rose steeply in 2015 and 2016, the illicit market share shot up almost in lockstep. This chart overlays both trends — the red line tracks illicit share (left axis), the orange dashed line tracks duty rate (right axis). The <strong>direct relationship</strong> between higher tax rates and black market growth is unmistakable. Can Malaysia keep raising tobacco taxes without simply enriching smugglers?</p>
       <div class="findings-box">
         <p class="findings-title">The policy dilemma</p>
         <ul>
@@ -323,7 +321,7 @@
       <div id="tax_vs_illicit"></div>
       <p class="chart-caption">Fig. 10 — Excise duty (sen/stick) vs illicit market share (%), 2015–2024. Sources: RMCD; ICS/Nielsen Malaysia.</p>
     </div>
-    <div class="key-insight"><strong>Key insight:</strong> The correlation is striking — every time duty rose, the illicit share rose within 12 months. The left axis (red) shows illicit market share; the right axis (green dashed) shows excise duty. Both move in the same direction.</div>
+    <div class="key-insight"><strong>Key insight:</strong> The correlation is striking — every time duty rose, the illicit share rose within 12 months. The left axis (red) shows illicit market share; the right axis (orange dashed) shows excise duty. Both move in the same direction.</div>
   </section>
 
   <hr class="rule-divider thick" />
