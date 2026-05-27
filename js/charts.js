@@ -683,3 +683,55 @@ vegaEmbed("#slope_chart", {
     }
   ]
 });
+
+
+// ── Chart 13: Small Multiples (repeat) — smoking by gender/overall ──
+vegaEmbed("#small_multiples", {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  title: "Smoking Prevalence by Group Over Time (Small Multiples)",
+  repeat: ["prevalence_overall", "prevalence_male", "prevalence_female"],
+  columns: 3,
+  spec: {
+    width: 220,
+    height: 200,
+    data: { url: BASE + "smoking_trend_national.csv" },
+    layer: [
+      {
+        mark: { type: "line", point: { size: 60 }, strokeWidth: 2.5 },
+        encoding: {
+          x: {
+            field: "year", type: "ordinal", title: "Year",
+            axis: { labelAngle: -45, labelFontSize: 9 }
+          },
+          y: {
+            field: { repeat: "repeat" },
+            type: "quantitative",
+            title: "Prevalence (%)",
+            scale: { zero: false }
+          },
+          color: {
+            field: { repeat: "repeat" },
+            type: "nominal",
+            scale: {
+              domain: ["prevalence_overall", "prevalence_male", "prevalence_female"],
+              range: ["#1a6b8a", "#1a6b8a", "#e07b54"]
+            },
+            legend: null
+          },
+          tooltip: [
+            { field: "year", title: "Year" },
+            { field: { repeat: "repeat" }, type: "quantitative", title: "Prevalence (%)" },
+            { field: "source", title: "Source" }
+          ]
+        }
+      },
+      {
+        mark: { type: "rule", strokeDash: [5, 4], color: "#e07b00", strokeWidth: 1.5 },
+        data: { values: [{ target: 15 }] },
+        encoding: {
+          y: { field: "target", type: "quantitative" }
+        }
+      }
+    ]
+  }
+});
