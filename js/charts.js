@@ -17,8 +17,9 @@ const BASE =
 vegaEmbed("#choropleth", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Smoking Prevalence by Malaysian State (2019)",
-  width: 700,
-  height: 420,
+  width: "container",
+  height: 460,
+  autosize: { type: "fit", contains: "padding" },
   params: [
     {
       name: "zoom_level",
@@ -69,7 +70,7 @@ vegaEmbed("#choropleth", {
       }
     }
   ]
-});
+}, { width: "container" });
 
 // ── Chart 2: Smoking Trend — STEEL BLUE ───────────────────────
 vegaEmbed("#line_trend", {
