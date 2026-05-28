@@ -690,14 +690,18 @@ vegaEmbed("#slope_chart", {
 vegaEmbed("#small_multiples", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Smoking Prevalence by Group Over Time (Small Multiples)",
-  repeat: ["prevalence_overall", "prevalence_male", "prevalence_female"],
-  columns: 3,
+  data: { url: BASE + "smoking_trend_national.csv" },
+  transform: [
+    // Add target column so the rule layer can use the same data source as the line
+    { calculate: "15", as: "target_line" }
+  ],
+  repeat: { column: ["prevalence_overall", "prevalence_male", "prevalence_female"] },
   spec: {
     width: 220,
     height: 200,
-    data: { url: BASE + "smoking_trend_national.csv" },
     layer: [
       {
+        // Trend line
         mark: { type: "line", point: { size: 60 }, strokeWidth: 2.5 },
         encoding: {
           x: {
@@ -705,13 +709,13 @@ vegaEmbed("#small_multiples", {
             axis: { labelAngle: -45, labelFontSize: 9 }
           },
           y: {
-            field: { repeat: "repeat" },
+            field: { repeat: "column" },
             type: "quantitative",
             title: "Prevalence (%)",
-            scale: { zero: false }
+            scale: { domain: [0, 48] }  /* shared scale across all panels — required for valid small multiples comparison */
           },
           color: {
-            field: { repeat: "repeat" },
+            field: { repeat: "column" },
             type: "nominal",
             scale: {
               domain: ["prevalence_overall", "prevalence_male", "prevalence_female"],
@@ -721,16 +725,16 @@ vegaEmbed("#small_multiples", {
           },
           tooltip: [
             { field: "year", title: "Year" },
-            { field: { repeat: "repeat" }, type: "quantitative", title: "Prevalence (%)" },
+            { field: { repeat: "column" }, type: "quantitative", title: "Prevalence (%)", format: ".1f" },
             { field: "source", title: "Source" }
           ]
         }
       },
       {
+        // 15% target line — uses same data source via calculated field to avoid repeat conflict
         mark: { type: "rule", strokeDash: [5, 4], color: "#e07b00", strokeWidth: 1.5 },
-        data: { values: [{ target: 15 }] },
         encoding: {
-          y: { field: "target", type: "quantitative" }
+          y: { field: "target_line", type: "quantitative" }
         }
       }
     ]
