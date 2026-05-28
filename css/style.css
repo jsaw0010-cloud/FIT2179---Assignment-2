@@ -329,7 +329,20 @@ p strong {
   border-bottom-color: var(--chart-blue);
 }
 
-/* ── Responsive ─────────────────────────────────────────────── */
+/* ── Map chart: full-width, no clipping ─────────────────────── */
+/* Data-ink ratio principle: the chart-wrap border/padding around a map
+   adds non-data ink; reduce it so the map fills space efficiently      */
+.chart-map {
+  padding: 1rem 0.5rem 0.75rem;   /* less side padding — map needs horizontal room */
+  overflow: visible;
+}
+
+/* Ensure the Vega embed inside the map uses full container width */
+.chart-map .vega-embed,
+.chart-map .vega-embed > * {
+  width: 100% !important;
+}
+
 @media (max-width: 700px) {
   body { font-size: 16px; }
   .page-wrap { padding: 0 1rem 4rem; }
