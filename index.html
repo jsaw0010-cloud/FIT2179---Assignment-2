@@ -1,757 +1,370 @@
-const BASE =
-  "https://raw.githubusercontent.com/jsaw0010-cloud/FIT2179---Assignment-2/main/data/";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Hidden Cost of Cheap Cigarettes — Malaysia's Sin Tax Dilemma</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
 
-// COLOUR SYSTEM
-// Chart 1  — Reds scheme (choropleth, sequential quantitative)
-// Chart 2  — Steel blue #1a6b8a (trend line, informational)
-// Chart 3  — Orange #e07b00 (tax/fiscal policy bars — colourblind-safe with blue & red)
-// Chart 4  — Purple #7b2d8b (tobacco) + Amber #d4a017 (alcohol)
-// Chart 5  — Crimson #c0392b (illicit/danger signal)
-// Chart 6  — Steel blue (legal) + Crimson (illicit) — intentional semantic reuse
-// Chart 7  — 5-category palette (each category gets a distinct colour)
-// Chart 8  — Steel blue (male) + Terracotta #e07b54 (female)
-// Chart 9  — Blues sequential scheme (neutral categorical)
-// Chart 10 — Crimson (illicit) + Orange #e07b00 (tax/fiscal) — colourblind-safe pair
+<!-- ── Nav bar — all 12 sections ── -->
+<nav class="top-nav">
+  <span class="nav-title">Sin Tax Malaysia</span>
+  <a href="#s1">01 Where</a>
+  <a href="#s2">02 Trend</a>
+  <a href="#s3">03 The Tax</a>
+  <a href="#s4">04 Revenue</a>
+  <a href="#s4b">04b Shift</a>
+  <a href="#s5">05 Contraband</a>
+  <a href="#s6">06 ASEAN</a>
+  <a href="#s6b">06b Gap</a>
+  <a href="#s7">07 Who Smokes</a>
+  <a href="#s8">08 Gender</a>
+  <a href="#s9">09 Ethnicity</a>
+  <a href="#s10">10 The Paradox</a>
+</nav>
 
-// ── Chart 1: Zoomable Choropleth Map ──────────────────────────
-vegaEmbed("#choropleth", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Smoking Prevalence by Malaysian State (2019)",
-  width: "container",
-  height: 460,
-  autosize: { type: "fit", contains: "padding" },
-  params: [
-    {
-      name: "zoom_level",
-      value: 1800,
-      bind: { input: "range", min: 800, max: 5000, step: 100, name: "Zoom: " }
-    },
-    {
-      name: "center_to",
-      value: [109.5, 3.5],
-      bind: {
-        input: "select",
-        options: [[109.5, 3.5],[101.5, 3.1],[116.0, 5.5],[103.8, 1.5]],
-        labels: ["All Malaysia","Peninsular Malaysia","Sabah / Sarawak","Southern Peninsular"],
-        name: "Map Centre: "
-      }
-    }
-  ],
-  projection: {
-    type: "mercator",
-    center: { expr: "center_to" },
-    scale: { expr: "zoom_level" }
-  },
-  layer: [
-    {
-      data: { url: BASE + "malaysia_state.topojson", format: { type: "topojson", feature: "states" } },
-      transform: [{ calculate: "'No data for ' + datum.properties.Name", as: "note" }],
-      mark: { type: "geoshape", fill: "#ddd", stroke: "white", strokeWidth: 1 },
-      encoding: { tooltip: { field: "note" } }
-    },
-    {
-      data: { url: BASE + "malaysia_state.topojson", format: { type: "topojson", feature: "states" } },
-      transform: [{
-        lookup: "properties.Name",
-        from: { data: { url: BASE + "smoking_by_state_2019.csv" }, key: "state", fields: ["smoking_rate_pct","above_national_avg","region"] }
-      }],
-      mark: { type: "geoshape", stroke: "white", strokeWidth: 1 },
-      encoding: {
-        color: {
-          field: "smoking_rate_pct", type: "quantitative", title: "Smoking Rate (%)",
-          scale: { scheme: "reds", domain: [10, 30] }, legend: { orient: "bottom-right" }
-        },
-        tooltip: [
-          { field: "properties.Name", title: "State" },
-          { field: "smoking_rate_pct", title: "Smoking Rate (%)" },
-          { field: "region", title: "Region" },
-          { field: "above_national_avg", title: "Above national avg?" }
-        ]
-      }
-    }
-  ]
-}, { width: "container" });
+<div class="page-wrap">
 
-// ── Chart 2: Smoking Trend — STEEL BLUE ───────────────────────
-vegaEmbed("#line_trend", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Smoking Prevalence in Malaysia (2011–2023)",
-  width: 620,
-  height: 300,
-  layer: [
-    {
-      data: { url: BASE + "smoking_trend_national.csv" },
-      mark: { type: "line", point: { size: 60, fill: "#1a6b8a" }, color: "#1a6b8a", strokeWidth: 2.5 },
-      encoding: {
-        x: { field: "year", type: "ordinal", title: "Year" },
-        y: { field: "prevalence_overall", type: "quantitative", title: "Prevalence (%)", scale: { domain: [17, 25] } },
-        tooltip: [
-          { field: "year", title: "Year" },
-          { field: "prevalence_overall", title: "Overall (%)" },
-          { field: "prevalence_male", title: "Male (%)" },
-          { field: "prevalence_female", title: "Female (%)" },
-          { field: "source", title: "Source" }
-        ]
-      }
-    },
-    {
-      data: { values: [{ year: "2015", prevalence_overall: 22.8 }] },
-      mark: { type: "text", align: "left", dx: 6, dy: -14, fontSize: 11, color: "#1a4f6a", fontWeight: "bold" },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "prevalence_overall", type: "quantitative" },
-        text: { value: "↓ Major tax hike (2015–16)" }
-      }
-    },
-    {
-      data: { values: [{ year: "2023", prevalence_overall: 19.0 }] },
-      mark: { type: "text", align: "right", dx: -6, dy: -14, fontSize: 11, color: "#1a6b8a", fontWeight: "bold" },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "prevalence_overall", type: "quantitative" },
-        text: { value: "19.0% (2023)" }
-      }
-    },
-    {
-      data: { values: [{ year: "2027", target: 15 }] },
-      mark: { type: "rule", strokeDash: [6, 4], color: "#e07b00", strokeWidth: 1.5 },
-      encoding: { y: { field: "target", type: "quantitative" } }
-    },
-    {
-      data: { values: [{ year: "2011", target: 15 }] },
-      mark: { type: "text", align: "left", dx: 4, dy: -8, fontSize: 10, color: "#e07b00", fontWeight: "bold" },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "target", type: "quantitative" },
-        text: { value: "2025 target: 15%" }
-      }
-    }
-  ]
-});
+  <header class="masthead">
+    <p class="kicker">Data Visualisation 2 · FIT2179 · Monash University Malaysia</p>
+    <h1>The Hidden Cost of <em>Cheap Cigarettes</em></h1>
+    <p class="deck">Malaysia taxes tobacco heavily — yet more than half of all cigarettes sold are smuggled, untaxed, and cheap. This is the story of how a well-intentioned sin tax created one of the world's largest illicit cigarette markets.</p>
+    <p class="byline">By Jim Saw Yong Jee &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; Data: NHMS 2019, GATS-M 2023, ICS/Nielsen Malaysia</p>
+  </header>
 
-// ── Chart 3: Excise Duty Bars — FOREST GREEN ──────────────────
-vegaEmbed("#excise_bar", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Cigarette Excise Duty Rate in Malaysia (2004–2025)",
-  width: 620,
-  height: 300,
-  layer: [
-    {
-      data: { url: BASE + "excise_duty_rates.csv" },
-      mark: { type: "bar", color: "#e07b00" },
-      encoding: {
-        x: { field: "year", type: "ordinal", title: "Year" },
-        y: { field: "duty_per_stick_sen", type: "quantitative", title: "Duty per Stick (sen)" },
-        opacity: { condition: { test: "datum.year == 2015 || datum.year == 2016", value: 1 }, value: 0.55 },
-        tooltip: [
-          { field: "year", title: "Year" },
-          { field: "duty_per_stick_sen", title: "Duty (sen/stick)" },
-          { field: "notes", title: "Notes" }
-        ]
-      }
-    },
-    {
-      data: { values: [{ year: "2015", duty: 22 }] },
-      mark: { type: "text", align: "center", dy: -12, fontSize: 11, color: "#b35900", fontWeight: "bold" },
-      encoding: { x: { field: "year", type: "ordinal" }, y: { field: "duty", type: "quantitative" }, text: { value: "+67%" } }
-    },
-    {
-      data: { values: [{ year: "2016", duty: 43 }] },
-      mark: { type: "text", align: "center", dy: -12, fontSize: 11, color: "#b35900", fontWeight: "bold" },
-      encoding: { x: { field: "year", type: "ordinal" }, y: { field: "duty", type: "quantitative" }, text: { value: "+100%" } }
-    },
-    {
-      data: { values: [{ year: "2018", duty: 44 }] },
-      mark: { type: "text", align: "left", dx: 4, dy: -10, fontSize: 10, color: "#666" },
-      encoding: { x: { field: "year", type: "ordinal" }, y: { field: "duty", type: "quantitative" }, text: { value: "← 7-year freeze" } }
-    }
-  ]
-});
+  <div class="stat-row">
+    <div class="stat-item"><span class="num">19%</span><span class="label">of Malaysian adults smoke — down from 23% in 2011</span></div>
+    <div class="stat-item"><span class="num">55%</span><span class="label">of cigarettes sold in Malaysia are illicit (2024)</span></div>
+    <div class="stat-item"><span class="num">RM 4–8</span><span class="label">black market price vs RM 9–12 for a legal pack</span></div>
+    <div class="stat-item"><span class="num">42 sen</span><span class="label">excise duty per stick since Budget 2026</span></div>
+  </div>
 
-// ── Chart 4: Revenue Stacked Bar — PURPLE + AMBER ─────────────
-vegaEmbed("#sin_tax_revenue", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Sin Tax Revenue: Tobacco vs Alcohol (2012–2017)",
-  width: 500,
-  height: 300,
-  data: { url: BASE + "sin_tax_revenue.csv" },
-  transform: [{ fold: ["tobacco_revenue_myr_mil", "alcohol_revenue_myr_mil"], as: ["revenue_type", "revenue"] }],
-  mark: { type: "bar", width: 40 },
-  encoding: {
-    x: { field: "year", type: "ordinal", title: "Year" },
-    y: { field: "revenue", type: "quantitative", title: "Revenue (MYR million)", stack: "zero" },
-    color: {
-      field: "revenue_type", type: "nominal",
-      scale: { domain: ["tobacco_revenue_myr_mil", "alcohol_revenue_myr_mil"], range: ["#7b2d8b", "#d4a017"] },
-      legend: { title: "Revenue Type", labelExpr: "datum.label === 'tobacco_revenue_myr_mil' ? 'Tobacco' : 'Alcohol'" }
-    },
-    tooltip: [
-      { field: "year", title: "Year" },
-      { field: "revenue_type", title: "Type" },
-      { field: "revenue", title: "Revenue (MYR mil)", format: ",.0f" },
-      { field: "sin_tax_pct_of_excise", title: "% of Total Excise Revenue" }
-    ]
-  }
-});
+  <!-- ── Section 1: Map ── -->
+  <section class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">01 — Where</span>
+      <h2>Smoking is not evenly spread across Malaysia</h2>
+    </div>
+    <div class="section-intro">
+      <p>The burden of tobacco use falls heaviest on the northern and east coast states. <strong>Kedah leads at 27.6%</strong>, nearly double the rate in Putrajaya (12.3%). Rural states consistently show higher prevalence, reflecting income levels, enforcement gaps, and easier access to cheap contraband cigarettes. Use the zoom slider and map centre dropdown to explore each region.</p>
+      <div class="findings-box">
+        <p class="findings-title">Key findings</p>
+        <ul>
+          <li>States above the national average (21.3%) are concentrated in the north and east coast</li>
+          <li>Urban federal territories (KL, Putrajaya) show the lowest rates, partly due to stricter enforcement</li>
+          <li>East Malaysia (Sabah 25.3%) bucks the rural trend due to contraband inflow via sea borders</li>
+        </ul>
+      </div>
+    </div>
+    <div class="chart-wrap chart-map">
+      <div id="choropleth"></div>
+      <p class="chart-caption">Fig. 1 — Smoking prevalence (%) by Malaysian state. Source: NHMS 2019, Institute for Public Health Malaysia.</p>
+    </div>
+    <div class="key-insight"><strong>Key insight:</strong> Kedah's smoking rate of 27.6% is more than double that of Putrajaya (12.3%) — the urban-rural divide is the single strongest predictor of smoking prevalence across all Malaysian states.</div>
+    <p class="transition">Now that we know <em>where</em> smoking is concentrated, let's see whether it has been declining over time.</p>
+  </section>
 
-// ── Chart 5: Illicit Trend — CRIMSON (brushable) ──────────────
-vegaEmbed("#illicit_trend", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  data: { url: BASE + "illicit_cigarettes_trend.csv" },
-  vconcat: [
-    {
-      title: "Illicit Cigarette Market Share in Malaysia (2015–2024)",
-      width: 620,
-      height: 280,
-      layer: [
-        {
-          mark: { type: "area", color: "#c0392b", opacity: 0.08 },
-          encoding: {
-            x: { field: "year", type: "ordinal", scale: { domain: { param: "time_brush" } }, axis: { title: "" } },
-            y: { field: "illicit_share_pct", type: "quantitative", scale: { domain: [30, 72] } },
-            y2: { datum: 30 }
-          }
-        },
-        {
-          mark: { type: "line", point: { size: 70, fill: "#c0392b" }, color: "#c0392b", strokeWidth: 2.5 },
-          encoding: {
-            x: { field: "year", type: "ordinal", scale: { domain: { param: "time_brush" } }, axis: { title: "" } },
-            y: { field: "illicit_share_pct", type: "quantitative", title: "Illicit Market Share (%)", scale: { domain: [30, 72] } },
-            tooltip: [
-              { field: "year", title: "Year" },
-              { field: "illicit_share_pct", title: "Illicit Share (%)" },
-              { field: "notes", title: "Notes" }
-            ]
-          }
-        },
-        {
-          data: { values: [{ year: "2016" }] },
-          mark: { type: "rule", strokeDash: [5, 4], color: "#922b21", strokeWidth: 1.5 },
-          encoding: { x: { field: "year", type: "ordinal" } }
-        },
-        {
-          data: { values: [{ year: "2020" }] },
-          mark: { type: "rule", strokeDash: [5, 4], color: "#888", strokeWidth: 1.5 },
-          encoding: { x: { field: "year", type: "ordinal" } }
-        },
-        {
-          data: { values: [{ year: "2023" }] },
-          mark: { type: "rule", strokeDash: [5, 4], color: "#e07b00", strokeWidth: 1.5 },
-          encoding: { x: { field: "year", type: "ordinal" } }
-        },
-        {
-          data: { values: [
-            { year: "2016", y: 70, label: "2015–16 Tax Hike" },
-            { year: "2020", y: 70, label: "Peak: 63.8%" },
-            { year: "2023", y: 70, label: "Moratorium" }
-          ]},
-          mark: { type: "text", align: "left", dx: 4, fontSize: 10, fontWeight: "bold" },
-          encoding: {
-            x: { field: "year", type: "ordinal" },
-            y: { field: "y", type: "quantitative" },
-            text: { field: "label" },
-            color: {
-              field: "label", type: "nominal",
-              scale: { domain: ["2015–16 Tax Hike","Peak: 63.8%","Moratorium"], range: ["#922b21","#555","#e07b00"] },
-              legend: null
-            }
-          }
-        }
-      ]
-    },
-    {
-      width: 620,
-      height: 50,
-      title: "Drag to select a time range ↓",
-      params: [{ name: "time_brush", select: { type: "interval", encodings: ["x"] } }],
-      mark: { type: "line", color: "#c0392b" },
-      encoding: {
-        x: { field: "year", type: "ordinal", axis: { title: "Year" } },
-        y: { field: "illicit_share_pct", type: "quantitative", axis: { tickCount: 3, grid: false, title: "" } }
-      }
-    }
-  ]
-});
+  <hr class="rule-divider" />
 
-// ── Chart 6: ASEAN Prices — BLUE (legal) + CRIMSON (illicit) ──
-vegaEmbed("#asean_prices", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Legal vs Illicit Cigarette Prices Across ASEAN (2023)",
-  width: 550,
-  height: 280,
-  data: { url: BASE + "asean_cigarette_prices.csv" },
-  transform: [
-    { fold: ["legal_price_usd", "illicit_price_usd"], as: ["price_type", "price"] },
-    { filter: "datum.price !== null && datum.price !== ''" }
-  ],
-  mark: { type: "bar" },
-  encoding: {
-    y: { field: "country", type: "nominal", title: null, sort: { op: "max", field: "price", order: "descending" } },
-    x: { field: "price", type: "quantitative", title: "Price (USD per pack)" },
-    color: {
-      field: "price_type", type: "nominal",
-      scale: { domain: ["legal_price_usd", "illicit_price_usd"], range: ["#1a6b8a", "#c0392b"] },
-      legend: { title: "Price Type", labelExpr: "datum.label === 'legal_price_usd' ? 'Legal' : 'Illicit'" }
-    },
-    tooltip: [
-      { field: "country", title: "Country" },
-      { field: "price_type", title: "Type" },
-      { field: "price", title: "Price (USD)", format: ".2f" },
-      { field: "tax_share_pct", title: "Tax Share (%)" },
-      { field: "smoking_prevalence_pct", title: "Smoking Prevalence (%)" }
-    ]
-  }
-});
+  <!-- ── Section 2: Trend ── -->
+  <section class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02 — When</span>
+      <h2>Smoking has been declining — but too slowly to meet targets</h2>
+    </div>
+    <div class="side-by-side">
+      <div class="text-col">
+        <p>Malaysia set a national target of <strong>15% smoking prevalence by 2025</strong>. The 2023 rate of 19% shows progress — four percentage points lower than 2011 — but the country remains well off track. At the current pace, the 15% target may not be reached until after 2030.</p>
+        <div class="key-insight"><strong>Key insight:</strong> At the current rate of decline, Malaysia will not reach its 15% target until after 2030 — five years late. The orange dashed line shows exactly how far off track the country remains.</div>
+        <div class="pullquote"><p>"The 2015–2016 tax hike was the single biggest push — but its gains were immediately undermined by the surge in contraband supply."</p></div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-wrap">
+          <div id="line_trend"></div>
+          <p class="chart-caption">Fig. 2 — National smoking prevalence among adults aged 15+, 2011–2023. Sources: GATS 2011, NHMS 2015 &amp; 2019, GATS-M 2023.</p>
+        </div>
+      </div>
+    </div>
+    <p class="transition">The decline is real — but what drove it? The answer lies in Malaysia's tobacco tax policy, and the story is more complicated than it first appears.</p>
+  </section>
 
-// ── Chart 7: Demographics — 5-CATEGORY PALETTE (dropdown) ─────
-vegaEmbed("#demographics", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Smoking Prevalence by Demographic Group",
-  width: 400,
-  height: 200,
-  params: [{
-    name: "category_selection",
-    bind: {
-      input: "select",
-      options: [null, "gender", "age_group", "ethnicity", "education", "residence"],
-      labels: ["Show All", "Gender", "Age Group", "Ethnicity", "Education", "Residence"],
-      name: "Filter by category: "
-    }
-  }],
-  data: { url: BASE + "smoking_demographics.csv" },
-  transform: [{ filter: "category_selection == null || datum.category == category_selection" }],
-  layer: [
-    {
-      mark: { type: "bar", cornerRadiusEnd: 4 },
-      encoding: {
-        y: { field: "group", type: "nominal", title: null, sort: { field: "prevalence_pct", op: "max", order: "descending" }, axis: { labelFontSize: 12 } },
-        x: { field: "prevalence_pct", type: "quantitative", title: "Smoking Prevalence (%)", scale: { domain: [0, 45] } },
-        color: {
-          field: "category", type: "nominal",
-          scale: {
-            domain: ["gender","age_group","ethnicity","education","residence"],
-            range: ["#c0392b","#1a6b8a","#e07b00","#d4a017","#7b2d8b"]
-          },
-          legend: { title: "Category" }
-        },
-        tooltip: [
-          { field: "category", title: "Category" },
-          { field: "group", title: "Group" },
-          { field: "prevalence_pct", title: "Prevalence (%)" },
-          { field: "source", title: "Source" }
-        ]
-      }
-    },
-    {
-      mark: { type: "text", align: "left", dx: 5, fontSize: 11, fontWeight: "bold", color: "#4a3f30" },
-      encoding: {
-        y: { field: "group", type: "nominal", sort: { field: "prevalence_pct", op: "max", order: "descending" } },
-        x: { field: "prevalence_pct", type: "quantitative" },
-        text: { field: "prevalence_pct", format: ".1f" }
-      }
-    }
-  ]
-});
+  <hr class="rule-divider" />
 
-// ── Chart 8: Gender Trend — BLUE (male) + TERRACOTTA (female) ─
-vegaEmbed("#gender_trend", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Male vs Female Smoking Prevalence in Malaysia (2011–2023)",
-  width: 620,
-  height: 300,
-  data: { url: BASE + "smoking_trend_national.csv" },
-  transform: [{ fold: ["prevalence_male", "prevalence_female"], as: ["gender", "prevalence"] }],
-  layer: [
-    {
-      mark: { type: "line", point: { size: 70 } },
-      encoding: {
-        x: { field: "year", type: "ordinal", title: "Year" },
-        y: { field: "prevalence", type: "quantitative", title: "Prevalence (%)", scale: { zero: true, domain: [0, 48] } },
-        color: {
-          field: "gender", type: "nominal",
-          scale: { domain: ["prevalence_male","prevalence_female"], range: ["#1a6b8a","#e07b54"] },
-          legend: { title: "Gender", labelExpr: "datum.label === 'prevalence_male' ? 'Male' : 'Female'" }
-        },
-        strokeWidth: {
-          field: "gender", type: "nominal",
-          scale: { domain: ["prevalence_male","prevalence_female"], range: [3, 2] },
-          legend: null
-        },
-        strokeDash: {
-          field: "gender", type: "nominal",
-          scale: { domain: ["prevalence_male","prevalence_female"], range: [[1,0],[6,3]] },
-          legend: null
-        },
-        tooltip: [
-          { field: "year", title: "Year" },
-          { field: "gender", title: "Gender" },
-          { field: "prevalence", title: "Prevalence (%)" },
-          { field: "source", title: "Source" }
-        ]
-      }
-    },
-    {
-      data: { values: [
-        { year: "2023", prevalence: 35.7, label: "Male: 35.7%" },
-        { year: "2023", prevalence: 1.5, label: "Female: 1.5%" }
-      ]},
-      mark: { type: "text", align: "right", dx: -6, fontSize: 11, fontWeight: "bold" },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "prevalence", type: "quantitative" },
-        text: { field: "label" },
-        color: {
-          field: "label", type: "nominal",
-          scale: { domain: ["Male: 35.7%","Female: 1.5%"], range: ["#1a6b8a","#e07b54"] },
-          legend: null
-        }
-      }
-    }
-  ]
-});
+  <!-- ── Section 3: Excise ── -->
+  <section class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03 — The Tax</span>
+      <h2>Excise duty was raised sharply in 2015–16, then frozen</h2>
+    </div>
+    <div class="side-by-side">
+      <div class="text-col">
+        <p>For most of the 2000s, Malaysia taxed cigarettes at just 8–10 sen per stick. A dramatic restructuring in 2015 (to 20 sen) and 2016 (to 40 sen) more than quadrupled the rate in two years. Then came a <strong>seven-year freeze</strong> as the government grappled with political fallout from the illicit market boom. Budget 2026 finally added 2 sen more — a modest step.</p>
+        <div class="key-insight"><strong>Key insight:</strong> The 2015–2016 hikes quadrupled the duty rate in just two years — the steepest tobacco tax increase in Malaysian history. The seven years of no change that followed reflect how politically difficult the issue became.</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-wrap">
+          <div id="excise_bar"></div>
+          <p class="chart-caption">Fig. 3 — Cigarette excise duty rate (sen per stick), 2004–2025. Source: Royal Malaysian Customs Department (RMCD) / Budget documents.</p>
+        </div>
+      </div>
+    </div>
+    <p class="transition">Higher taxes generated more government revenue — but that money came with an unexpected cost.</p>
+  </section>
 
-// ── Chart 9: Ethnicity Bars — BLUES SEQUENTIAL ────────────────
-vegaEmbed("#ethnicity_bar", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Smoking Prevalence by Ethnicity in Malaysia (2019)",
-  width: 500,
-  height: 200,
-  data: { values: [
-    { ethnicity: "Malay", prevalence: 22.6 },
-    { ethnicity: "Other Bumiputra", prevalence: 21.7 },
-    { ethnicity: "Chinese", prevalence: 13.7 },
-    { ethnicity: "Indian", prevalence: 11.5 }
-  ]},
-  layer: [
-    {
-      mark: { type: "bar", cornerRadiusEnd: 4 },
-      encoding: {
-        y: { field: "ethnicity", type: "nominal", title: null, sort: { field: "prevalence", order: "descending" }, axis: { labelFontSize: 13 } },
-        x: { field: "prevalence", type: "quantitative", title: "Smoking Prevalence (%)", scale: { domain: [0, 30] } },
-        color: {
-          field: "prevalence", type: "quantitative",
-          scale: { scheme: "blues", domain: [10, 25] },
-          legend: null
-        },
-        tooltip: [
-          { field: "ethnicity", title: "Ethnicity" },
-          { field: "prevalence", title: "Prevalence (%)" }
-        ]
-      }
-    },
-    {
-      mark: { type: "text", align: "left", dx: 6, fontSize: 12, fontWeight: "bold", color: "#4a3f30" },
-      encoding: {
-        y: { field: "ethnicity", type: "nominal", sort: { field: "prevalence", order: "descending" } },
-        x: { field: "prevalence", type: "quantitative" },
-        text: { field: "prevalence", format: ".1f" }
-      }
-    }
-  ]
-});
+  <hr class="rule-divider" />
 
-// ── Chart 10: Tax vs Illicit — CRIMSON + GREEN (dual axis) ────
-vegaEmbed("#tax_vs_illicit", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Excise Duty vs Illicit Market Share (2015–2024)",
-  width: 620,
-  height: 320,
-  resolve: { scale: { y: "independent" } },
-  layer: [
-    {
-      data: { url: BASE + "illicit_cigarettes_trend.csv" },
-      mark: { type: "area", opacity: 0.1, color: "#c0392b" },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "illicit_share_pct", type: "quantitative", title: "Illicit Market Share (%)", axis: { titleColor: "#922b21", labelColor: "#922b21", orient: "left", titlePadding: 10 }, scale: { domain: [30, 72] } },
-        y2: { datum: 30 }
-      }
-    },
-    {
-      data: { url: BASE + "illicit_cigarettes_trend.csv" },
-      mark: { type: "line", point: { size: 60, fill: "#c0392b" }, color: "#c0392b", strokeWidth: 2.5 },
-      encoding: {
-        x: { field: "year", type: "ordinal", title: "Year" },
-        y: { field: "illicit_share_pct", type: "quantitative", scale: { domain: [30, 72] } },
-        tooltip: [
-          { field: "year", title: "Year" },
-          { field: "illicit_share_pct", title: "Illicit Share (%)" }
-        ]
-      }
-    },
-    {
-      data: { url: BASE + "excise_duty_rates.csv" },
-      transform: [{ filter: "datum.year >= 2015" }],
-      mark: { type: "line", point: { size: 60, fill: "#e07b00" }, color: "#e07b00", strokeWidth: 2.5, strokeDash: [6, 3] },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "duty_per_stick_sen", type: "quantitative", title: "Duty per Stick (sen)", axis: { titleColor: "#b35900", labelColor: "#b35900", orient: "right", titlePadding: 12, titleAngle: 90, titleAlign: "center" }, scale: { domain: [15, 50] } },
-        tooltip: [
-          { field: "year", title: "Year" },
-          { field: "duty_per_stick_sen", title: "Duty (sen/stick)" },
-          { field: "notes", title: "Notes" }
-        ]
-      }
-    },
-    {
-      data: { values: [
-        { year: "2015", y: 68, label: "Tax: 20 sen →" },
-        { year: "2016", y: 63, label: "Tax: 40 sen →" }
-      ]},
-      mark: { type: "text", align: "left", dx: 5, fontSize: 10, fontWeight: "bold", color: "#b35900" },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "y", type: "quantitative", scale: { domain: [30, 72] } },
-        text: { field: "label" }
-      }
-    }
-  ]
-});
+  <!-- ── Section 4: Revenue ── -->
+  <section class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04 — The Revenue</span>
+      <h2>Sin taxes generate billions — but tobacco dominates</h2>
+    </div>
+    <div class="side-by-side">
+      <div class="text-col">
+        <p>Together, tobacco and alcohol excise duties contributed over RM 5.8 billion to government revenue by 2017. Tobacco alone accounts for roughly 75–80% of this total. While the revenue case for sin taxes is often cited by policymakers, alcohol revenue has barely grown — partly because Malaysia's Muslim-majority population already has low consumption rates.</p>
+        <div class="key-insight"><strong>Key insight:</strong> Tobacco contributes nearly 80% of all sin tax revenue; alcohol's share has barely grown despite rising duty rates — a reflection of Malaysia's predominantly Muslim demographics and cultural norms around alcohol consumption.</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-wrap">
+          <div id="sin_tax_revenue"></div>
+          <p class="chart-caption">Fig. 4 — Government excise revenue from tobacco and alcohol (MYR million), 2012–2017. Source: Galen Centre for Health and Social Policy / Ministry of Finance Malaysia.</p>
+        </div>
+      </div>
+    </div>
+    <p class="transition">But which category grew its <em>share</em>? The slope chart below shows the shift in proportions.</p>
+  </section>
 
+  <hr class="rule-divider" />
 
-// ── Chart 11: Dumbbell — ASEAN legal vs illicit price gap ─────
-vegaEmbed("#dumbbell", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Legal vs Illicit Cigarette Price Gap by ASEAN Country (2023)",
-  width: 500,
-  height: 260,
-  data: {
-    values: [
-      { country: "Singapore",  legal: 13.50, illicit: null,  gap: null },
-      { country: "Thailand",   legal: 3.20,  illicit: null,  gap: null },
-      { country: "Malaysia",   legal: 2.60,  illicit: 1.10,  gap: 1.50 },
-      { country: "Indonesia",  legal: 2.10,  illicit: null,  gap: null },
-      { country: "Philippines",legal: 1.80,  illicit: null,  gap: null },
-      { country: "Vietnam",    legal: 1.20,  illicit: null,  gap: null },
-      { country: "Myanmar",    legal: 0.80,  illicit: null,  gap: null }
-    ]
-  },
-  layer: [
-    {
-      transform: [
-        { fold: ["legal", "illicit"], as: ["price_type", "price"] },
-        { filter: "datum.price !== null" }
-      ],
-      mark: { type: "rule", strokeWidth: 3, color: "#c0392b", opacity: 0.4 },
-      encoding: {
-        y: {
-          field: "country", type: "nominal", title: null,
-          sort: { field: "legal", order: "descending" }
-        },
-        x: { field: "legal", type: "quantitative" },
-        x2: { field: "illicit" },
-        tooltip: [
-          { field: "country", title: "Country" },
-          { field: "legal", title: "Legal Price (USD)", format: ".2f" },
-          { field: "illicit", title: "Illicit Price (USD)", format: ".2f" },
-          { field: "gap", title: "Gap (USD)", format: ".2f" }
-        ]
-      }
-    },
-    {
-      transform: [
-        { fold: ["legal", "illicit"], as: ["price_type", "price"] },
-        { filter: "datum.price !== null" }
-      ],
-      mark: { type: "point", filled: true, size: 120 },
-      encoding: {
-        y: {
-          field: "country", type: "nominal",
-          sort: { field: "legal", order: "descending" }
-        },
-        x: { field: "price", type: "quantitative", title: "Price (USD per pack)" },
-        color: {
-          field: "price_type", type: "nominal",
-          scale: { domain: ["legal", "illicit"], range: ["#1a6b8a", "#c0392b"] },
-          legend: { title: "Price Type", labelExpr: "datum.label === 'legal' ? 'Legal' : 'Illicit'" }
-        },
-        tooltip: [
-          { field: "country", title: "Country" },
-          { field: "price_type", title: "Type" },
-          { field: "price", title: "Price (USD)", format: ".2f" }
-        ]
-      }
-    },
-    {
-      transform: [{ filter: "datum.gap !== null" }],
-      mark: {
-        type: "text", align: "left", dx: 8, fontSize: 11,
-        fontWeight: "bold", color: "#c0392b"
-      },
-      encoding: {
-        y: {
-          field: "country", type: "nominal",
-          sort: { field: "legal", order: "descending" }
-        },
-        x: { field: "legal", type: "quantitative" },
-        text: { field: "gap", format: ".2f" }
-      }
-    },
-    {
-      transform: [{ filter: "datum.gap !== null" }],
-      mark: {
-        type: "text", align: "left", dx: 36, fontSize: 9,
-        color: "#c0392b"
-      },
-      encoding: {
-        y: {
-          field: "country", type: "nominal",
-          sort: { field: "legal", order: "descending" }
-        },
-        x: { field: "legal", type: "quantitative" },
-        text: { value: "USD gap" }
-      }
-    }
-  ]
-});
+  <!-- ── Section 4b: Slope chart ── -->
+  <section class="section" id="s4b">
+    <div class="section-header">
+      <span class="section-num">04b — Revenue Shift</span>
+      <h2>Tobacco's share of sin tax revenue grew after the 2015 hike</h2>
+    </div>
+    <div class="side-by-side">
+      <div class="text-col">
+        <p>After the 2015–2016 tax hikes, tobacco's share of total sin tax revenue jumped from 73% to nearly 80%. This slope chart shows the shift clearly — each line connects a revenue category's share in 2012 to its share in 2017. Tobacco climbed while alcohol's share shrank, making the government even more financially dependent on tobacco duties.</p>
+        <div class="key-insight"><strong>Key insight:</strong> The 2015 tax hike made Malaysia's government <em>more</em> dependent on tobacco revenue, not less — creating a structural conflict between health policy and fiscal policy.</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-wrap">
+          <div id="slope_chart"></div>
+          <p class="chart-caption">Fig. 11 — Tobacco vs alcohol share of total sin tax revenue, 2012 vs 2017. Source: Galen Centre for Health and Social Policy / Ministry of Finance Malaysia.</p>
+        </div>
+      </div>
+    </div>
+    <p class="transition">Revenue rose sharply after the tax hikes — but so did something else entirely. Something the government did not intend.</p>
+  </section>
 
-// ── Chart 12: Slope chart — revenue share shift ───────────────
-vegaEmbed("#slope_chart", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Sin Tax Revenue Share: 2012 vs 2017",
-  width: 280,
-  height: 280,
-  data: {
-    values: [
-      { year: "2012", category: "Tobacco", share: 73.1 },
-      { year: "2017", category: "Tobacco", share: 79.8 },
-      { year: "2012", category: "Alcohol", share: 26.9 },
-      { year: "2017", category: "Alcohol", share: 20.2 }
-    ]
-  },
-  layer: [
-    {
-      mark: { type: "line", strokeWidth: 3 },
-      encoding: {
-        x: {
-          field: "year", type: "ordinal", title: null,
-          axis: { labelFontSize: 13, labelFontWeight: "bold" }
-        },
-        y: {
-          field: "share", type: "quantitative",
-          title: "Share of Sin Tax Revenue (%)",
-          scale: { domain: [0, 100] }
-        },
-        color: {
-          field: "category", type: "nominal",
-          scale: { domain: ["Tobacco", "Alcohol"], range: ["#7b2d8b", "#d4a017"] },
-          legend: { title: "Category" }
-        },
-        detail: { field: "category", type: "nominal" }
-      }
-    },
-    {
-      mark: { type: "point", filled: true, size: 100 },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "share", type: "quantitative" },
-        color: {
-          field: "category", type: "nominal",
-          scale: { domain: ["Tobacco", "Alcohol"], range: ["#7b2d8b", "#d4a017"] }
-        },
-        tooltip: [
-          { field: "year", title: "Year" },
-          { field: "category", title: "Category" },
-          { field: "share", title: "Share (%)", format: ".1f" }
-        ]
-      }
-    },
-    {
-      transform: [{ filter: "datum.year === '2012'" }],
-      mark: { type: "text", align: "right", dx: -10, fontSize: 12, fontWeight: "bold" },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "share", type: "quantitative" },
-        text: { field: "share", format: ".1f" },
-        color: {
-          field: "category", type: "nominal",
-          scale: { domain: ["Tobacco", "Alcohol"], range: ["#7b2d8b", "#d4a017"] }
-        }
-      }
-    },
-    {
-      transform: [{ filter: "datum.year === '2017'" }],
-      mark: { type: "text", align: "left", dx: 10, fontSize: 12, fontWeight: "bold" },
-      encoding: {
-        x: { field: "year", type: "ordinal" },
-        y: { field: "share", type: "quantitative" },
-        text: { field: "share", format: ".1f" },
-        color: {
-          field: "category", type: "nominal",
-          scale: { domain: ["Tobacco", "Alcohol"], range: ["#7b2d8b", "#d4a017"] }
-        }
-      }
-    }
-  ]
-});
+  <hr class="rule-divider" />
 
+  <!-- ── Section 5: Illicit ── -->
+  <section class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">05 — The Unintended Consequence</span>
+      <h2>Higher taxes fuelled a contraband explosion</h2>
+    </div>
+    <div class="section-intro">
+      <p>The 2015–2016 tax hikes created an enormous price gap between legal and illegal cigarettes. Smugglers — mostly from duty-free zones in Labuan, Langkawi, and cross-border networks with Indonesia — flooded the market with cheap contraband. By 2020, <strong>nearly 2 in 3 cigarettes</strong> sold in Malaysia were illicit. Enforcement has since clawed back some ground, with the moratorium on new brands introduced in 2023 helping to stabilise the figure at 55%. Drag on the bottom mini-chart to zoom into any time period.</p>
+      <div class="findings-box">
+        <p class="findings-title">Why this matters</p>
+        <ul>
+          <li>Illicit cigarettes bypass health warnings, age restrictions, and tar limits</li>
+          <li>Government loses an estimated RM 4–5 billion in foregone excise revenue annually</li>
+          <li>Low contraband prices directly undercut the tax's deterrent effect on smokers</li>
+        </ul>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <div id="illicit_trend"></div>
+      <p class="chart-caption">Fig. 5 — Illicit cigarette market share (%), 2015–2024. Source: Illicit Cigarette Study (ICS), Nielsen Malaysia / Confederation of Malaysian Tobacco Manufacturers.</p>
+    </div>
+    <div class="key-insight"><strong>Key insight:</strong> The illicit market nearly doubled in size between 2015 and 2020 — directly tracking the tax hikes year by year. Drag the bottom chart to zoom into the 2015–2018 surge and see the correlation clearly.</div>
+    <p class="transition">How does Malaysia's situation compare to its neighbours? The regional picture puts the problem in sharp relief.</p>
+  </section>
 
-// ── Chart 13: Small Multiples — fold + facet approach ──
-vegaEmbed("#small_multiples", {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  title: "Smoking Prevalence by Group Over Time (Small Multiples)",
-  data: { url: BASE + "smoking_trend_national.csv" },
-  transform: [
-    {
-      fold: ["prevalence_overall", "prevalence_male", "prevalence_female"],
-      as: ["group", "prevalence"]
-    },
-    {
-      calculate: "datum.group === 'prevalence_overall' ? 'Overall' : datum.group === 'prevalence_male' ? 'Male' : 'Female'",
-      as: "group_label"
-    },
-    { calculate: "15", as: "target_line" }
-  ],
-  facet: {
-    field: "group_label",
-    type: "nominal",
-    sort: ["Overall", "Male", "Female"],
-    header: {
-      title: null,
-      labelFontSize: 13,
-      labelFontWeight: "bold",
-      labelColor: "#1a1008"
-    }
-  },
-  columns: 3,
-  spec: {
-    width: 200,    /* width/height must be INSIDE spec for per-panel sizing in facet */
-    height: 200,
-    layer: [
-      {
-        mark: { type: "line", point: { size: 60 }, strokeWidth: 2.5 },
-        encoding: {
-          x: {
-            field: "year", type: "ordinal", title: "Year",
-            axis: { labelAngle: -45, labelFontSize: 9 }
-          },
-          y: {
-            field: "prevalence", type: "quantitative",
-            title: "Prevalence (%)",
-            scale: { domain: [0, 48] }
-          },
-          color: {
-            field: "group_label", type: "nominal",
-            scale: {
-              domain: ["Overall", "Male", "Female"],
-              range: ["#1a6b8a", "#1a6b8a", "#e07b54"]
-            },
-            legend: null
-          },
-          tooltip: [
-            { field: "year", title: "Year" },
-            { field: "group_label", title: "Group" },
-            { field: "prevalence", title: "Prevalence (%)", format: ".1f" },
-            { field: "source", title: "Source" }
-          ]
-        }
-      },
-      {
-        mark: { type: "rule", strokeDash: [5, 4], color: "#e07b00", strokeWidth: 1.5 },
-        encoding: {
-          y: { field: "target_line", type: "quantitative" }
-        }
-      }
-    ]
-  }
-});
+  <hr class="rule-divider" />
+
+  <!-- ── Section 6: ASEAN grouped bar ── -->
+  <section class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">06 — Regional Context</span>
+      <h2>Malaysia's legal cigarettes are cheap by ASEAN standards — except compared to contraband</h2>
+    </div>
+    <div class="side-by-side">
+      <div class="text-col">
+        <p>A legal pack of cigarettes in Malaysia costs around USD 2.60 — far below Singapore's USD 13.50 but above Indonesia's USD 2.10. The critical issue is not the absolute price but the <strong>gap between legal and illicit</strong>. Malaysia's black market pack sells for USD 1.10 — less than half the legal price. No other ASEAN country has a comparable illicit market size.</p>
+        <div class="key-insight"><strong>Key insight:</strong> Malaysia's illicit pack costs less than half the legal price — a gap no other ASEAN country comes close to matching. Singapore's high-tax approach ($13.50/pack) has suppressed both legal consumption and illicit trade through stringent border controls.</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-wrap">
+          <div id="asean_prices"></div>
+          <p class="chart-caption">Fig. 6 — Legal and illicit cigarette pack prices (USD) across ASEAN, 2023. Sources: WHO Tobacco Control Data, industry reports.</p>
+        </div>
+      </div>
+    </div>
+    <p class="transition">The bar chart shows the prices — but the dumbbell chart below makes the <em>gap</em> the visual focus.</p>
+  </section>
+
+  <hr class="rule-divider" />
+
+  <!-- ── Section 6b: Dumbbell chart ── -->
+  <section class="section" id="s6b">
+    <div class="section-header">
+      <span class="section-num">06b — The Price Gap</span>
+      <h2>The gap between legal and illicit prices tells the real story</h2>
+    </div>
+    <div class="side-by-side">
+      <div class="text-col">
+        <p>A standard bar chart shows prices — but it hides the most important number: the <strong>gap</strong> between what a legal and an illicit pack costs in each country. This connected dot plot makes that gap the visual focus. The wider the line, the bigger the incentive to buy contraband. Malaysia's gap is uniquely large for a country of its income level.</p>
+        <div class="key-insight"><strong>Key insight:</strong> Malaysia's price gap of USD 1.50 per pack is the largest in ASEAN relative to its legal price — creating a 58% discount for contraband buyers. No other ASEAN country faces this combination of high tax and weak border enforcement.</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-wrap">
+          <div id="dumbbell"></div>
+          <p class="chart-caption">Fig. 12 — Legal vs illicit cigarette price gap (USD) by ASEAN country, 2023. The connecting line is shown only for Malaysia, as reliable illicit price data is not publicly available for other ASEAN countries. Sources: WHO Tobacco Control Data, industry reports.</p>
+        </div>
+      </div>
+    </div>
+    <p class="transition">Across all these numbers, one question remains: who exactly is still smoking? The answer reveals deep social inequalities.</p>
+  </section>
+
+  <hr class="rule-divider" />
+
+  <!-- ── Section 7: Demographics ── -->
+  <section class="section" id="s7">
+    <div class="section-header">
+      <span class="section-num">07 — Who Smokes</span>
+      <h2>Smoking is overwhelmingly a male, lower-education phenomenon</h2>
+    </div>
+    <p>Malaysia's smoking demographics reveal stark disparities. Men smoke at 35.7% — versus just 1.5% for women — one of the widest gender gaps in the world. Adults aged 25–44 have the highest rates, while those with only primary education smoke at three times the rate of university graduates. Rural residents smoke significantly more than urban dwellers. Use the dropdown to filter by demographic category.</p>
+    <div class="chart-wrap">
+      <div id="demographics"></div>
+      <p class="chart-caption">Fig. 7 — Smoking prevalence (%) by demographic group. Sources: NHMS 2019, GATS-M 2023, Institute for Public Health Malaysia.</p>
+    </div>
+    <div class="key-insight"><strong>Key insight:</strong> Use the dropdown to filter — primary-educated adults smoke at 31.2%, nearly three times the rate of university graduates (10.8%). Education level is the strongest socioeconomic predictor of smoking in Malaysia.</div>
+    <p class="transition">The gender gap alone deserves closer examination — the divergence between men and women is one of the most striking patterns in Malaysia's smoking data.</p>
+  </section>
+
+  <hr class="rule-divider" />
+
+  <!-- ── Section 8: Gender ── -->
+  <section class="section" id="s8">
+    <div class="section-header">
+      <span class="section-num">08 — Gender Gap</span>
+      <h2>Men and women smoke at vastly different rates</h2>
+    </div>
+    <div class="side-by-side">
+      <div class="text-col">
+        <p>Malaysia has one of the widest gender gaps in smoking globally. Male smoking has fallen from <strong>43.9% in 2011 to 35.7% in 2023</strong>, while female rates have barely moved, staying below 2% throughout. Social norms strongly discourage women from smoking in Malaysia, but this also means female smokers are less likely to seek cessation support or be counted in official surveys.</p>
+        <div class="key-insight"><strong>Key insight:</strong> Malaysia's gender gap in smoking (35.7% male vs 1.5% female) is one of the widest in the world. While male rates declined by 8 percentage points since 2011, female rates have barely shifted — suggesting different social dynamics govern each group.</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-wrap">
+          <div id="gender_trend"></div>
+          <p class="chart-caption">Fig. 8 — Male vs female smoking prevalence (%), 2011–2023. Sources: GATS 2011, NHMS 2015 &amp; 2019, GATS-M 2023.</p>
+        </div>
+      </div>
+    </div>
+    <p class="transition">The gap is also visible across ethnic communities — smoking rates differ significantly depending on cultural background.</p>
+  </section>
+
+  <hr class="rule-divider" />
+
+<!-- ── Section 08b: Small Multiples ── -->
+<section class="section" id="s8b">
+  <div class="section-header">
+    <span class="section-num">08b — Small Multiples</span>
+    <h2>Three views of the same decline — overall, male, and female</h2>
+  </div>
+  <p>
+    Small multiples place the same chart type side by side with different data subsets,
+    making comparison effortless. Here, the same time axis and scale shows overall,
+    male, and female smoking trends simultaneously. The orange dashed line marks
+    Malaysia's 15% national target in all three panels — making it immediately clear
+    that men are furthest from the target, while women are already well below it.
+  </p>
+  <div class="chart-wrap">
+    <div id="small_multiples"></div>
+    <p class="chart-caption">Fig. 13 — Smoking prevalence (%) by group, 2011–2023, shown as small multiples.
+    Sources: GATS 2011, NHMS 2015 &amp; 2019, GATS-M 2023.</p>
+  </div>
+  <div class="key-insight"><strong>Key insight:</strong> All three panels use the same Y-axis scale (0–48%) so comparisons are honest. Female smoking (right panel) appears as a near-flat line at the very bottom — making the gender gap visually unmistakable. The challenge is entirely on the male side, where rates remain more than double the 15% target.</div>
+  <p class="transition">The gap is also visible across ethnic communities — smoking rates differ significantly depending on cultural background.</p>
+</section>
+
+  <!-- ── Section 9: Ethnicity ── -->
+  <section class="section" id="s9">
+    <div class="section-header">
+      <span class="section-num">09 — Ethnicity</span>
+      <h2>Smoking rates vary significantly across ethnic groups</h2>
+    </div>
+    <div class="side-by-side">
+      <div class="text-col">
+        <p>Malay and other Bumiputera communities show the highest smoking rates, while Chinese and Indian Malaysians smoke considerably less. This pattern is consistent across all NHMS surveys since 2011 and likely reflects a combination of cultural norms, income levels, and geographic distribution across urban and rural areas.</p>
+        <div class="key-insight"><strong>Key insight:</strong> Malay smokers (22.6%) outnumber Indian smokers (11.5%) by nearly two to one — a disparity consistent across all NHMS surveys since 2011. Targeted cessation programmes by ethnicity could be more effective than blanket tax policies.</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-wrap">
+          <div id="ethnicity_bar"></div>
+          <p class="chart-caption">Fig. 9 — Smoking prevalence (%) by ethnicity, 2019. Source: National Health and Morbidity Survey (NHMS) 2019.</p>
+        </div>
+      </div>
+    </div>
+    <p class="transition">With all demographic patterns established, the final chart brings the central paradox into sharp focus.</p>
+  </section>
+
+  <hr class="rule-divider" />
+
+  <!-- ── Section 10: Tax vs illicit ── -->
+  <section class="section" id="s10">
+    <div class="section-header">
+      <span class="section-num">10 — The Paradox</span>
+      <h2>Every tax hike drove more smokers to the black market</h2>
+    </div>
+    <div class="section-intro">
+      <p>When excise duty rose steeply in 2015 and 2016, the illicit market share shot up almost in lockstep. This chart overlays both trends — the red line tracks illicit share (left axis), the orange dashed line tracks duty rate (right axis). A dual-axis design is used deliberately here: the two variables use different units, but what matters is their <strong>direction of co-movement</strong>, not a comparison of magnitudes. The <strong>direct relationship</strong> between higher tax rates and black market growth is unmistakable. Can Malaysia keep raising tobacco taxes without simply enriching smugglers?</p>
+      <div class="findings-box">
+        <p class="findings-title">The policy dilemma</p>
+        <ul>
+          <li>Higher taxes reduce legal sales but do not necessarily reduce total consumption</li>
+          <li>Smuggled cigarettes undercut the tax's health deterrent entirely</li>
+          <li>Enforcement, not just taxation, is needed to close the gap</li>
+        </ul>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <div id="tax_vs_illicit"></div>
+      <p class="chart-caption">Fig. 10 — Excise duty (sen/stick) vs illicit market share (%), 2015–2024. A dual-axis layout is used here intentionally: both variables share the same time axis, and the goal is to show the direction of co-movement rather than compare magnitudes. The left axis (red) shows illicit market share; the right axis (orange dashed) shows excise duty. Sources: RMCD; ICS/Nielsen Malaysia.</p>
+    </div>
+    <div class="key-insight"><strong>Key insight:</strong> The correlation is striking — every time duty rose, the illicit share rose within 12 months. The left axis (red) shows illicit market share; the right axis (orange dashed) shows excise duty. Both move in the same direction.</div>
+  </section>
+
+  <hr class="rule-divider thick" />
+
+  <footer class="sources">
+    <h3>Data Sources &amp; References</h3>
+    <ol>
+      <li>Institute for Public Health (2024). <em>National Health and Morbidity Survey (NHMS) 2023: Non-Communicable Diseases — Key Findings.</em> Ministry of Health Malaysia. <a href="https://iku.nih.gov.my/nhms" target="_blank">iku.nih.gov.my/nhms</a></li>
+      <li>World Health Organization (2024). <em>Global Adult Tobacco Survey — Malaysia 2023 (GATS-M 2023) Fact Sheet.</em> <a href="https://cdn.who.int/media/docs/default-source/ncds/ncd-surveillance/data-reporting/malaysia/mys-gats2023-factsheet.pdf" target="_blank">WHO</a></li>
+      <li>Nielsen Malaysia / Confederation of Malaysian Tobacco Manufacturers (2024). <em>Illicit Cigarettes Study (ICS) 2024.</em> BAT Malaysia.</li>
+      <li>Galen Centre for Health and Social Policy. <em>Sin Tax Revenue Data, Malaysia 2012–2017.</em></li>
+      <li>Royal Malaysian Customs Department (RMCD). <em>Excise Duty Rates, Historical 2004–2025.</em></li>
+      <li>Our World in Data (2024). <em>Smoking Prevalence, ASEAN countries.</em> <a href="https://ourworldindata.org/smoking" target="_blank">ourworldindata.org/smoking</a></li>
+    </ol>
+    <p style="margin-top:1.5rem; font-size:0.78rem; color:var(--ink-faint);">
+      Authored by Jim Saw Yong Jee · FIT2179 Data Visualisation 2 · Monash University Malaysia · May 2026 ·
+      AI tools (Claude by Anthropic) were used to assist with code generation, data structuring, and grammar checking. All data is sourced from publicly available datasets.
+    </p>
+  </footer>
+
+</div>
+<script src="js/charts.js"></script>
+</body>
+</html>
