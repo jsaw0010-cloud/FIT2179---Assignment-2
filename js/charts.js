@@ -307,8 +307,9 @@ vegaEmbed("#asean_prices", {
 vegaEmbed("#demographics", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Smoking Prevalence by Demographic Group",
-  width: 400,
-  height: 200,
+  width: "container",
+  height: { step: 32 },  /* dynamic height: 32px per bar so all 14 labels are readable */
+  autosize: { type: "fit", contains: "padding" },
   params: [{
     name: "category_selection",
     bind: {
@@ -332,7 +333,7 @@ vegaEmbed("#demographics", {
             domain: ["gender","age_group","ethnicity","education","residence"],
             range: ["#c0392b","#1a6b8a","#e07b00","#d4a017","#7b2d8b"]
           },
-          legend: { title: "Category" }
+          legend: { title: "Category", orient: "bottom", direction: "horizontal" }
         },
         tooltip: [
           { field: "category", title: "Category" },
@@ -351,9 +352,9 @@ vegaEmbed("#demographics", {
       }
     }
   ]
-});
+}, { width: "container" });
 
-// ── Chart 8: Gender Trend — BLUE (male) + TERRACOTTA (female) ─
+// ── Chart 8: Gender Trend
 vegaEmbed("#gender_trend", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Male vs Female Smoking Prevalence in Malaysia (2011–2023)",
