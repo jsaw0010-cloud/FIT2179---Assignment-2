@@ -686,22 +686,39 @@ vegaEmbed("#slope_chart", {
 });
 
 
-// ── Chart 13: Small Multiples (repeat) — smoking by gender/overall ──
+// ── Chart 13: Small Multiples — fold + facet approach ──
 vegaEmbed("#small_multiples", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Smoking Prevalence by Group Over Time (Small Multiples)",
   data: { url: BASE + "smoking_trend_national.csv" },
   transform: [
-    // Add target column so the rule layer can use the same data source as the line
+    {
+      fold: ["prevalence_overall", "prevalence_male", "prevalence_female"],
+      as: ["group", "prevalence"]
+    },
+    {
+      calculate: "datum.group === 'prevalence_overall' ? 'Overall' : datum.group === 'prevalence_male' ? 'Male' : 'Female'",
+      as: "group_label"
+    },
     { calculate: "15", as: "target_line" }
   ],
-  repeat: { column: ["prevalence_overall", "prevalence_male", "prevalence_female"] },
+  facet: {
+    field: "group_label",
+    type: "nominal",
+    sort: ["Overall", "Male", "Female"],
+    header: {
+      title: null,
+      labelFontSize: 13,
+      labelFontWeight: "bold",
+      labelColor: "#1a1008"
+    }
+  },
+  columns: 3,
   spec: {
-    width: 220,
+    width: 200,    /* width/height must be INSIDE spec for per-panel sizing in facet */
     height: 200,
     layer: [
       {
-        // Trend line
         mark: { type: "line", point: { size: 60 }, strokeWidth: 2.5 },
         encoding: {
           x: {
@@ -709,29 +726,27 @@ vegaEmbed("#small_multiples", {
             axis: { labelAngle: -45, labelFontSize: 9 }
           },
           y: {
-            field: { repeat: "column" },
-            type: "quantitative",
+            field: "prevalence", type: "quantitative",
             title: "Prevalence (%)",
-            scale: { domain: [0, 48] }  /* shared scale across all panels — required for valid small multiples comparison */
+            scale: { domain: [0, 48] }
           },
           color: {
-            field: { repeat: "column" },
-            type: "nominal",
+            field: "group_label", type: "nominal",
             scale: {
-              domain: ["prevalence_overall", "prevalence_male", "prevalence_female"],
+              domain: ["Overall", "Male", "Female"],
               range: ["#1a6b8a", "#1a6b8a", "#e07b54"]
             },
             legend: null
           },
           tooltip: [
             { field: "year", title: "Year" },
-            { field: { repeat: "column" }, type: "quantitative", title: "Prevalence (%)", format: ".1f" },
+            { field: "group_label", title: "Group" },
+            { field: "prevalence", title: "Prevalence (%)", format: ".1f" },
             { field: "source", title: "Source" }
           ]
         }
       },
       {
-        // 15% target line — uses same data source via calculated field to avoid repeat conflict
         mark: { type: "rule", strokeDash: [5, 4], color: "#e07b00", strokeWidth: 1.5 },
         encoding: {
           y: { field: "target_line", type: "quantitative" }
