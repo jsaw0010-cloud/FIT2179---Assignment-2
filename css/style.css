@@ -329,7 +329,12 @@ p strong {
   border-bottom-color: var(--chart-blue);
 }
 
-/* ── Map chart: full-width, no clipping ─────────────────────── */
+/* ── Slope chart: narrow by design, centred to avoid left-side void ── */
+#slope_chart {
+  display: flex;
+  justify-content: center;
+}
+
 /* Data-ink ratio principle: the chart-wrap border/padding around a map
    adds non-data ink; reduce it so the map fills space efficiently      */
 .chart-map {
