@@ -455,8 +455,9 @@ vegaEmbed("#ethnicity_bar", {
 vegaEmbed("#tax_vs_illicit", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Excise Duty vs Illicit Market Share (2015–2024)",
-  width: 620,
+  width: "container",
   height: 320,
+  autosize: { type: "fit", contains: "padding" },
   resolve: { scale: { y: "independent" } },
   layer: [
     {
@@ -507,10 +508,10 @@ vegaEmbed("#tax_vs_illicit", {
       }
     }
   ]
-});
+}, { width: "container" });
 
 
-// ── Chart 11: Dumbbell — ASEAN legal vs illicit price gap ─────
+// ── Chart 11: Dumbbell
 vegaEmbed("#dumbbell", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Legal vs Illicit Cigarette Price Gap by ASEAN Country (2023)",
