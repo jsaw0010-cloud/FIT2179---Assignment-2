@@ -198,10 +198,11 @@ vegaEmbed("#sin_tax_revenue", {
 vegaEmbed("#illicit_trend", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   data: { url: BASE + "illicit_cigarettes_trend.csv" },
+  autosize: { type: "fit", contains: "padding" },
   vconcat: [
     {
       title: "Illicit Cigarette Market Share in Malaysia (2015–2024)",
-      width: 620,
+      width: "container",
       height: 280,
       layer: [
         {
@@ -260,7 +261,7 @@ vegaEmbed("#illicit_trend", {
       ]
     },
     {
-      width: 620,
+      width: "container",
       height: 50,
       title: "Drag to select a time range ↓",
       params: [{ name: "time_brush", select: { type: "interval", encodings: ["x"] } }],
@@ -271,9 +272,9 @@ vegaEmbed("#illicit_trend", {
       }
     }
   ]
-});
+}, { width: "container" });
 
-// ── Chart 6: ASEAN Prices — BLUE (legal) + CRIMSON (illicit) ──
+// ── Chart 6: ASEAN Prices
 vegaEmbed("#asean_prices", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Legal vs Illicit Cigarette Prices Across ASEAN (2023)",
