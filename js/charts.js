@@ -76,8 +76,9 @@ vegaEmbed("#choropleth", {
 vegaEmbed("#line_trend", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Smoking Prevalence in Malaysia (2011–2023)",
-  width: 620,
+  width: "container",
   height: 300,
+  autosize: { type: "fit", contains: "padding" },
   layer: [
     {
       data: { url: BASE + "smoking_trend_national.csv" },
@@ -127,14 +128,15 @@ vegaEmbed("#line_trend", {
       }
     }
   ]
-});
+}, { width: "container" });
 
 // ── Chart 3: Excise Duty Bars — FOREST GREEN ──────────────────
 vegaEmbed("#excise_bar", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Cigarette Excise Duty Rate in Malaysia (2004–2025)",
-  width: 620,
+  width: "container",
   height: 300,
+  autosize: { type: "fit", contains: "padding" },
   layer: [
     {
       data: { url: BASE + "excise_duty_rates.csv" },
@@ -166,14 +168,15 @@ vegaEmbed("#excise_bar", {
       encoding: { x: { field: "year", type: "ordinal" }, y: { field: "duty", type: "quantitative" }, text: { value: "← 7-year freeze" } }
     }
   ]
-});
+}, { width: "container" });
 
 // ── Chart 4: Revenue Stacked Bar — PURPLE + AMBER ─────────────
 vegaEmbed("#sin_tax_revenue", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Sin Tax Revenue: Tobacco vs Alcohol (2012–2017)",
-  width: 500,
+  width: "container",
   height: 300,
+  autosize: { type: "fit", contains: "padding" },
   data: { url: BASE + "sin_tax_revenue.csv" },
   transform: [{ fold: ["tobacco_revenue_myr_mil", "alcohol_revenue_myr_mil"], as: ["revenue_type", "revenue"] }],
   mark: { type: "bar", width: 40 },
@@ -192,7 +195,7 @@ vegaEmbed("#sin_tax_revenue", {
       { field: "sin_tax_pct_of_excise", title: "% of Total Excise Revenue" }
     ]
   }
-});
+}, { width: "container" });
 
 // ── Chart 5: Illicit Trend — CRIMSON (brushable) ──────────────
 vegaEmbed("#illicit_trend", {
@@ -278,8 +281,9 @@ vegaEmbed("#illicit_trend", {
 vegaEmbed("#asean_prices", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Legal vs Illicit Cigarette Prices Across ASEAN (2023)",
-  width: 550,
+  width: "container",
   height: 280,
+  autosize: { type: "fit", contains: "padding" },
   data: { url: BASE + "asean_cigarette_prices.csv" },
   transform: [
     { fold: ["legal_price_usd", "illicit_price_usd"], as: ["price_type", "price"] },
@@ -302,9 +306,9 @@ vegaEmbed("#asean_prices", {
       { field: "smoking_prevalence_pct", title: "Smoking Prevalence (%)" }
     ]
   }
-});
+}, { width: "container" });
 
-// ── Chart 7: Demographics — 5-CATEGORY PALETTE (dropdown) ─────
+// ── Chart 7: Demographics
 vegaEmbed("#demographics", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Smoking Prevalence by Demographic Group",
@@ -359,8 +363,9 @@ vegaEmbed("#demographics", {
 vegaEmbed("#gender_trend", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Male vs Female Smoking Prevalence in Malaysia (2011–2023)",
-  width: 620,
+  width: "container",
   height: 300,
+  autosize: { type: "fit", contains: "padding" },
   data: { url: BASE + "smoking_trend_national.csv" },
   transform: [{ fold: ["prevalence_male", "prevalence_female"], as: ["gender", "prevalence"] }],
   layer: [
@@ -410,14 +415,15 @@ vegaEmbed("#gender_trend", {
       }
     }
   ]
-});
+}, { width: "container" });
 
 // ── Chart 9: Ethnicity Bars — BLUES SEQUENTIAL ────────────────
 vegaEmbed("#ethnicity_bar", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Smoking Prevalence by Ethnicity in Malaysia (2019)",
-  width: 500,
+  width: "container",
   height: 200,
+  autosize: { type: "fit", contains: "padding" },
   data: { values: [
     { ethnicity: "Malay", prevalence: 22.6 },
     { ethnicity: "Other Bumiputra", prevalence: 21.7 },
@@ -450,7 +456,7 @@ vegaEmbed("#ethnicity_bar", {
       }
     }
   ]
-});
+}, { width: "container" });
 
 // ── Chart 10: Tax vs Illicit — CRIMSON + GREEN (dual axis) ────
 vegaEmbed("#tax_vs_illicit", {
@@ -516,8 +522,9 @@ vegaEmbed("#tax_vs_illicit", {
 vegaEmbed("#dumbbell", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Legal vs Illicit Cigarette Price Gap by ASEAN Country (2023)",
-  width: 500,
+  width: "container",
   height: 260,
+  autosize: { type: "fit", contains: "padding" },
   data: {
     values: [
       { country: "Singapore",  legal: 13.50, illicit: null,  gap: null },
@@ -606,9 +613,11 @@ vegaEmbed("#dumbbell", {
       }
     }
   ]
-});
+}, { width: "container" });
 
 // ── Chart 12: Slope chart — revenue share shift ───────────────
+// Slope chart intentionally stays narrow (280px) — only 2 time points;
+// full-width would over-stretch two data points into empty space
 vegaEmbed("#slope_chart", {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
   title: "Sin Tax Revenue Share: 2012 vs 2017",
